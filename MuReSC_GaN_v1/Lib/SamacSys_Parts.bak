@@ -1896,7 +1896,7 @@
         (number "1" (effects (font (size 1.27 1.27))))
       )
       (pin passive line (at 0 0 0) (length 2.54)
-        (name "2" (effects (font (size 1.27 1.27))))
+        (name "CRYSTAL_2" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
     )

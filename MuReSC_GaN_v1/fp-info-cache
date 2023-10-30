@@ -1,4 +1,4 @@
-22389066747802939
+22394162894464546
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -85029,6 +85029,20 @@ Connector
 2
 2
 SamacSys_Parts
+62000211121_x1
+62000211121-2
+Connector
+0
+1
+1
+SamacSys_Parts
+62000211121_x6
+62000211121-2
+Connector
+0
+6
+6
+SamacSys_Parts
 BGA6C40P2X3_86X126X62
 YFF006
 Integrated Circuit
@@ -85161,6 +85175,13 @@ Integrated Circuit
 0
 8
 8
+SamacSys_Parts
+SOIC127P1030X265-16N
+DVE0016A
+Integrated Circuit
+0
+16
+16
 SamacSys_Parts
 SON95P300X300X100-7N-D
 DFN6(3X3)
