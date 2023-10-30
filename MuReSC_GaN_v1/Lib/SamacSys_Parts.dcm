@@ -1,0 +1,204 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP NE555DR
+D Single Precision Timer
+K
+F http://www.ti.com/lit/ds/symlink/ne555.pdf
+$ENDCMP
+#
+$CMP STM32G474RET6
+D ARM Microcontrollers - MCU
+K
+F https://www.st.com/resource/en/datasheet/stm32g474re.pdf
+$ENDCMP
+#
+$CMP ISO7720FQDQ1
+D Automotive, High Speed, Robust EMC Reinforced Dual-Channel Digital Isolator
+K
+F http://www.ti.com/lit/gpn/ISO7720-Q1
+$ENDCMP
+#
+$CMP C1812C124J1GACTU
+D SMD Comm C0G, Ceramic, 0.12 uF, 5%, 100 VDC, 250 VDC, 125C, -55C, C0G, SMD, MLCC, Ultra-Stable, Low Loss, Class I, 0.1 % , 8.3333 GOhms, 67 mg, 1812, 4.5mm, 3.2mm, 1.4mm, 0.6mm, 1000, 78  Weeks, 120
+K
+F https://componentsearchengine.com/Datasheets/1/C1812C124J1GACTU.pdf
+$ENDCMP
+#
+$CMP C1206C821J1GACTU
+D SMD Comm C0G, Ceramic, 820 pF, 5%, 100 VDC, 250 VDC, 125C, -55C, C0G, SMD, MLCC, Ultra-Stable, Low Loss, Class I, 0.1 % , 100 GOhms, 15 mg, 1206, 3.2mm, 1.6mm, 0.78mm, 0.5mm, 4000, 78  Weeks, 120
+K
+F https://content.kemet.com/datasheets/KEM_C1003_C0G_SMD.pdf
+$ENDCMP
+#
+$CMP C1812C105K1RACTU
+D SMD Comm X7R, Ceramic, 1 uF, 10%, 100 VDC, 250 VDC, 125C, -55C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 1 GOhms, 95 mg, 1812, 4.5mm, 3.2mm, 1.55mm, 0.6mm, 1000, 78  Weeks, 80
+K
+F https://componentsearchengine.com/Datasheets/1/C1812C105K1RACTU.pdf
+$ENDCMP
+#
+$CMP GS61004B-TR
+D 100V, 38A, Enhancement mode GaN Transistor, GaNPX package, Bottom-side cooled
+K
+F https://gansystems.com/wp-content/uploads/2020/04/GS61004B-DS-Rev-200402.pdf
+$ENDCMP
+#
+$CMP LMG1020YFFR
+D 5V, 7A/5A Low Side GaN Driver With 60MHz/1ns Speed
+K
+F http://www.ti.com/lit/gpn/lmg1020
+$ENDCMP
+#
+$CMP TPSM5601R5HRDAR
+D 60-V input, 1-V to 16-V output, 1.5-A power module in enhanced HotRod QFN package
+K
+F https://www.ti.com/lit/ds/symlink/tpsm5601r5h.pdf?ts=1615877083661&ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FTPSM5601R5H%253FkeyMatch%253DTPSM5601R5HSRDAR%2526tisearch%253DSearch-EN-everything%2526usecase%253DOPN
+$ENDCMP
+#
+$CMP GRT155R70J105KE01D
+D Capacitor GRT15 L=1.0mm W=0.5mm T=0.5mm
+K
+F https://psearch.en.murata.com/capacitor/product/GRT155R70J105KE01%23.html
+$ENDCMP
+#
+$CMP NFM15PC104R1A3D
+D Capacitor L=1.0mm W=0.5mm T=0.4mm
+K
+F https://psearch.en.murata.com/capacitor/product/NFM15PC104R1A3%23.html
+$ENDCMP
+#
+$CMP MCS0402MC1008FE000
+D Thin Film Resistors - SMD .1W 1.0ohm 1% 0402 50ppm
+K
+F http://www.vishay.com/docs/28705/mcx0x0xpro.pdf
+$ENDCMP
+#
+$CMP MCS04020D1002BE000
+D Vishay Resistor Chip 0402
+K
+F http://www.vishay.com/docs/28705/mcx0x0xpro.pdf
+$ENDCMP
+#
+$CMP MCS04020D2491BE000
+D Thin Film Resistors - SMD 1/16W 0.1% 2.49ohms
+K
+F http://www.vishay.com/docs/28705/mcx0x0xpro.pdf
+$ENDCMP
+#
+$CMP GRJ31CZ72A475KE01L
+D Cap Ceramic 4.7uF 100V X7R 10% Pad SMD 1206 Soft Termination 125C T/R
+K
+F https://www.mouser.de/datasheet/2/281/GRJ31CZ72A475KE01_01-1977920.pdf
+$ENDCMP
+#
+$CMP C1210C107M8PACTU
+D SMD Comm X5R, Ceramic, 100 uF, 20%, 10 VDC, 25 VDC, 85C, -55C, X5R, SMD, MLCC, Temperature Stable, Class II, 10 % , 1 MOhms, 135 mg, 1210, 3.2mm, 2.5mm, 2.5mm, 0.5mm, 1000, 78  Weeks, 70
+K
+F https://content.kemet.com/datasheets/KEM_C1006_X5R_SMD.pdf
+$ENDCMP
+#
+$CMP C0402C104K8RAC7867
+D Multilayer Ceramic Capacitors MLCC - SMD/SMT 10V 0.1uF X7R 0402 10%
+K
+F https://www.kemet.com/specsheet/C0402C104K8RACTU
+$ENDCMP
+#
+$CMP GRM155R61A475MEAAD
+D Multilayer Ceramic Capacitors MLCC - SMD/SMT 4.7UF    10V   20%        0402
+K
+F http://www.murata.com/~/media/webrenewal/support/library/catalog/products/capacitor/mlcc/c02e.pdf
+$ENDCMP
+#
+$CMP NX3215SA-32.768K-STD-MUS-2
+D CRYSTAL 32.7680KHZ 12.5PF SMD
+K
+F https://www.arrow.com/en/products/nx3215sa32.768kstdmus2/ndk
+$ENDCMP
+#
+$CMP GRM155Z71A105KE01J
+D Murata
+K
+F http://www.murata.com/~/media/webrenewal/support/library/catalog/products/capacitor/mlcc/c02e.pdf
+$ENDCMP
+#
+$CMP GJM0335C1E6R8DB01D
+D Capacitor GJM03_0.03 L=0.6mm W=0.3mm T=0.3mm
+K
+F https://psearch.en.murata.com/capacitor/product/GJM0335C1E6R8DB01%23.html
+$ENDCMP
+#
+$CMP NX3225SA-24.000MHZ-STD-CSR-1
+D NDK 24MHz Crystal Unit +/-15ppm SMD 4-Pin 3.2 x 2.5 x 0.55mm
+K
+F https://www.ndk.com/images/products/catalog/c_NX3225SA-2_e.pdf
+$ENDCMP
+#
+$CMP PTS526_SK15_SMTR2_LFS
+D Tact 5.2 x 5.2, 1.5 mm H, 260gf, G leads, No ground pin, metal actuator
+K
+F https://www.ckswitches.com/media/2780/pts526.pdf
+$ENDCMP
+#
+$CMP ESDALC6V1-1U2
+D STMicroelectronics ESDALC6V1-1U2, Uni-Directional TVS Diode, 20W, 2-Pin ST-0201
+K
+F http://www.st.com/web/en/resource/technical/document/datasheet/CD00212838.pdf
+$ENDCMP
+#
+$CMP MCS04020C3300FE000
+D Thin Film Resistors - SMD .063W 330ohms 1% 0402 50ppm
+K
+F http://www.vishay.com/docs/28705/mcx0x0xpro.pdf
+$ENDCMP
+#
+$CMP MCS04020C1003FE000
+D VISHAY - MCS04020C1003FE000 - RES, THIN FILM, 100K, 1%, 50V, 0402
+K
+F http://www.vishay.com/docs/28705/mcx0x0xpro.pdf
+$ENDCMP
+#
+$CMP BLM15AG601SZ1D
+D BLM15_Z1D Series EMI Suppression Filter 600+/-25% at 100MHz 300mA @85
+K
+F http://www.murata.com/~/media/webrenewal/support/library/catalog/products/emc/emifil/c31e.ashx?la=en-gb
+$ENDCMP
+#
+$CMP C0603C106M8PAC7411
+D SMD Comm X5R, Ceramic, 10 uF, 20%, 10 VDC, 25 VDC, 85C, -55C, X5R, SMD, MLCC, Temperature Stable, Class II, 10 % , 10 MOhms, 7.3 mg, 0603, 1.6mm, 0.8mm, 0.8mm, 0.7mm, 0.35mm, 15000, 78  Weeks, 70
+K
+F https://content.kemet.com/datasheets/KEM_C1006_X5R_SMD.pdf
+$ENDCMP
+#
+$CMP TSZU52C3V3_RGG
+D Zener Diodes 150mW, 5%, Small Signal Zener Diode
+K
+F https://www.taiwansemi.com/assets/uploads/datasheet/TSZU52C2V0%20SERIES_G2009.pdf
+$ENDCMP
+#
+$CMP 62000211121
+D Wurth Elektronik, WR-PHD, 2 Way, 1 Row, Straight PCB Header
+K
+F https://www.we-online.com/catalog/datasheet/62000211121.pdf
+$ENDCMP
+#
+$CMP 691214110002
+D 3.5MM HORIZONTAL ENTRY MODULAR WITH RISING CAGE CLAMP - WR-TBL, 2 pos
+K
+F 
+$ENDCMP
+#
+$CMP LD39050PU33R
+D STMICROELECTRONICS - LD39050PU33R - LDO, FIXED, 3.3V, 0.5A, DFN-6
+K
+F https://componentsearchengine.com/Datasheets/2/LD39050PU33R.pdf
+$ENDCMP
+#
+#End Doc Library
+EESchema-DOCLIB  Version 2.0
+#
+$CMP UCC12040DVE
+D Isolated DC/DC Converters 500mW, high efficiency 3kVrms isolated DC-DC converter 16-SO-MOD -40 to 125
+K
+F https://www.ti.com/lit/gpn/UCC12040
+$ENDCMP
+#
+#End Doc Library
