@@ -202,3 +202,12 @@ F https://www.ti.com/lit/gpn/UCC12040
 $ENDCMP
 #
 #End Doc Library
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 2222SQ-221GEC
+D Fixed Inductors 2222 220nH Unshld 2% 5A 11mOhms
+K
+F https://componentsearchengine.com/Datasheets/2/2222SQ-221GEC.pdf
+$ENDCMP
+#
+#End Doc Library
