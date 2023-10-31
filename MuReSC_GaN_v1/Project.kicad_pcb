@@ -1623,7 +1623,7 @@
 
   (footprint "SamacSys_Parts:GS61004BTR" (layer "F.Cu")
     (tstamp 33986b98-ae48-4b5f-8cdf-7ed78992862b)
-    (at 159.47 83.07)
+    (at 164.46 93.28)
     (descr "GS61004B-TR")
     (tags "Transistor E-mode GaN (3-Pin)")
     (property "Height" "")
@@ -1687,7 +1687,7 @@
 
   (footprint "SamacSys_Parts:GS61004BTR" (layer "F.Cu")
     (tstamp 34cb4333-8735-430e-b399-005116f2cc3f)
-    (at 159.47 67.83)
+    (at 164.46 78.04)
     (descr "GS61004B-TR")
     (tags "Transistor E-mode GaN (3-Pin)")
     (property "Height" "")
@@ -4943,7 +4943,7 @@
 
   (footprint "SamacSys_Parts:GS61004BTR" (layer "F.Cu")
     (tstamp acc3878a-dac6-45bf-866a-ee3c2acc0507)
-    (at 159.47 50.05)
+    (at 164.46 60.26)
     (descr "GS61004B-TR")
     (tags "Transistor E-mode GaN (3-Pin)")
     (property "Height" "")
@@ -5505,7 +5505,7 @@
 
   (footprint "SamacSys_Parts:GS61004BTR" (layer "F.Cu")
     (tstamp b48b7ded-484e-41ed-bc48-b3bd77c9123d)
-    (at 159.47 98.31)
+    (at 164.46 108.52)
     (descr "GS61004B-TR")
     (tags "Transistor E-mode GaN (3-Pin)")
     (property "Height" "")
@@ -6505,7 +6505,7 @@
 
   (footprint "SamacSys_Parts:691214110002" (layer "F.Cu")
     (tstamp e2238b59-570a-4cb9-8ee9-bcc7193001f7)
-    (at 197.16 68.58)
+    (at 202.15 78.79)
     (descr "691214110002-2")
     (tags "Connector")
     (property "Height" "8.7")
