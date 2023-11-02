@@ -1,2 +1,3 @@
 *Project-backups
 *.DS_Store
+*.kicad_pcb.lck
