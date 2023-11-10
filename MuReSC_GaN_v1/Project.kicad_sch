@@ -6591,6 +6591,31 @@
     )
   )
 
+  (symbol (lib_id "Connector_Generic:Conn_01x01") (at 332.74 62.23 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 13935235-46a6-4566-b2a0-2902ad373928)
+    (property "Reference" "J5" (at 335.28 60.96 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "Conn_01x01" (at 335.28 63.5 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" (at 332.74 62.23 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 332.74 62.23 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 72d841ff-9901-4fbb-a2e8-7333c7cbb737))
+    (instances
+      (project "Project"
+        (path "/370b4fcc-a080-452a-8e5f-5eff99707865"
+          (reference "J5") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "Connector:TestPoint") (at 490.22 234.95 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 15b45861-89f1-4a64-9b66-46ca70155484)
@@ -11973,31 +11998,6 @@
       (project "Project"
         (path "/370b4fcc-a080-452a-8e5f-5eff99707865"
           (reference "#PWR053") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Connector:TestPoint") (at 327.66 62.23 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid e74f231a-9bff-432f-a803-7a35bc0eef9d)
-    (property "Reference" "TPGND1" (at 332.74 60.96 90)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "TestPoint" (at 332.74 63.5 90)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "TestPoint:TestPoint_Pad_1.0x1.0mm" (at 327.66 67.31 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 327.66 67.31 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 5a4095bb-768e-4b34-a52c-2d0f9f55cdcf))
-    (instances
-      (project "Project"
-        (path "/370b4fcc-a080-452a-8e5f-5eff99707865"
-          (reference "TPGND1") (unit 1)
         )
       )
     )
