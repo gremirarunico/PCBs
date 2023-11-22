@@ -2,3 +2,4 @@
 *.DS_Store
 *.kicad_pcb.lck
 */jlcpcb*
+*/MuReSC_GaN_firmware/Debug*
