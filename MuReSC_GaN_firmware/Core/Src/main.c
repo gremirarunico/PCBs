@@ -117,7 +117,7 @@ int main(void) {
 			} else if (i == 2) {
 				printf("\n\r Dai, ci sono! \n\r");
 			} else {
-				printf("\n\r Siamo alla %d rottura!", i);
+				printf("\n\r Siamo alla %d rottura, vedi o no!?", i);
 			}
 
 		}
