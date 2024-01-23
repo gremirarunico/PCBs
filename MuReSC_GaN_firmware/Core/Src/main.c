@@ -1,9 +1,31 @@
 /* USER CODE BEGIN Header */
+
+/*
+ * This file is part of the PCBs project (https://github.com/gremirarunico/PCBs).
+ * Copyright (c) 2024 Marco Guerrini.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #define HTIM_PERIOD 4352
 #include <stdio.h>
+#include <stdbool.h>
+#include <serial_parser.h>
+#include "application.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -11,6 +33,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -47,9 +70,9 @@ static void MX_COMP2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
-
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 
 /* USER CODE END 0 */
 
@@ -86,70 +109,10 @@ int main(void)
   MX_ADC2_Init();
   MX_COMP2_Init();
   /* USER CODE BEGIN 2 */
+  setup();
 
-	// 1 B
-	// 2 A
-	// 3 D
-	// 4 C
-
-	// 1
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].CMP1xR = 96;
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].CMP2xR = 2054;
-
-	//2
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = 2272;
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = 4230;
-
-	//3
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = 96;
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = 2054;
-
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = 2272;
-	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = 4230;
-
-
-	HAL_HRTIM_WaveformOutputStart(&hhrtim1,
-			HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
-					+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
-					+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
-	HAL_HRTIM_WaveformCounterStart(&hhrtim1,
-			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
-					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
-	int i=0;
 	while (1) {
-//		HAL_Delay(5000);
-//		HAL_HRTIM_WaveformOutputStop(&hhrtim1,
-//				HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
-//						+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
-//						+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
-//		HAL_Delay(5000);
-//		HAL_HRTIM_WaveformOutputStart(&hhrtim1,
-//				HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
-//						+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
-//						+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
-
-		if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin)) { // reads GPIO User Button status
-			i++;
-
-			if (i == 1) {
-				printf("\n\r Button pressed first time! \n\r");
-			} else if (i == 2) {
-				printf("\n\r Second time! \n\r");
-			} else {
-				printf("\n\r It's the %d th time you pressed!", i);
-			}
-			HAL_Delay(200);
-		}
-
-		// stop
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP1xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].CMP2xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].CMP1xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].CMP2xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP1xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].CMP2xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP1xR = 0;
-//		HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].CMP2xR = 0;
+		loop();
 	}
 	/* USER CODE BEGIN 3 */
 	/* USER CODE END 3 */

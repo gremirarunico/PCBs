@@ -1,0 +1,24 @@
+/*
+ * power_converter.h
+ *
+ *  Created on: Jan 19, 2024
+ *      Author: guerrinm
+ */
+
+#ifndef LIBS_POWER_CONVERTER_H_
+#define LIBS_POWER_CONVERTER_H_
+
+#include "main.h"
+
+/*************************
+ * @struct
+ * @brief contains all the important informations about waveforms for the MuReSC converter
+ *
+ ************************/
+struct WaveformParams{
+	int frequency;
+	int deadTime;
+	int dutyCycle;
+} ;
+
+#endif /* LIBS_POWER_CONVERTER_H_ */
