@@ -1,11 +1,12 @@
 /**
  ******************************************************************************
  * @file         application.h
- * @brief        This file provides code serial management
+ * @brief        Header for application.c file.
+  *              This file contains the common defines for the application.
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2024 Bologna Design.
+ * Copyright (c) 2024 Marco Guerrini.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -23,8 +24,22 @@
 extern UART_HandleTypeDef hlpuart1;
 extern HRTIM_HandleTypeDef hhrtim1;
 
+/**
+ * @fn void setup(void)
+ * @brief run one for the setup of additional peripheral not provided by CubeMX
+ *
+ * @pre
+ * @post
+ */
 void setup(void);
 
+/**
+ * @fn void loop(void)
+ * @brief the infinite loop (inside while(1) in the main)
+ *
+ * @pre
+ * @post
+ */
 void loop(void);
 
 

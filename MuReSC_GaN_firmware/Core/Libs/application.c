@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
  * @file         application.c
- * @brief        This file provides code serial management
+ * @brief        This file provides code for the application
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2024 Bologna Design.
+ * Copyright (c) 2024 Marco Guerrini.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -22,10 +22,16 @@
 
 #include <string.h>
 
-
 void test(void) {
 	if (serial_is_command("prova", 0)) {
 		serial_print("First command prova\n");
+		if (serial_is_command("e", 1)) {
+			serial_print("Second command e\n");
+			if (serial_is_command("camicia", 2)) {
+				serial_print("Third command is camicia\n");
+			}
+		}
+
 	} else if (serial_is_command("culo", 0)) {
 		serial_print("First command culo\n");
 	}

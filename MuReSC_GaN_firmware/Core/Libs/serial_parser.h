@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 Bologna Design.
+  * Copyright (c) 2024 Marco Guerrini.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
