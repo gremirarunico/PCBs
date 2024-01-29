@@ -14,18 +14,70 @@
  *
  */
 #define PC_MINIMUM_COUNTER 96
+#define PC_MAXIMUS_COUNTER 65503
+#define PC_HRTIM_EQ_CLK_FRQ 5.44e9 // 5.44G Hz
 
 #include "main.h"
+
+/**
+ * Handler for high resolution timer
+ */
+extern HRTIM_HandleTypeDef hhrtim1;
 
 /*************************
  * @struct
  * @brief contains all the important informations about waveforms for the MuReSC converter
  *
  ************************/
-struct WaveformParams{
-	int frequency;
-	int deadTime;
-	int dutyCycle;
-} ;
+struct WaveformParams {
+	unsigned int frequency;
+	unsigned int deadTime;
+	unsigned int dutyCycle;
+};
+
+/**
+ * @struct ComparatorHRTIM
+ * @brief contains all the values for the comparators of the HRTIM
+ *
+ */
+struct RgstrPrmHRTIM {
+	unsigned int period;
+	unsigned int A1;
+	unsigned int A2;
+	unsigned int B1;
+	unsigned int B2;
+	unsigned int C1;
+	unsigned int C2;
+	unsigned int D1;
+	unsigned int D2;
+};
+
+/**
+ * @fn void pc_set_cmps(struct ComparatorHRTIM*)
+ * @brief set the comparators of the HRTIM, pass a pointer of a data struct params
+ *
+ * @pre
+ * @post
+ * @param params
+ */
+void pc_set_cmps(struct RgstrPrmHRTIM *params);
+
+/**
+ * @fn void pc_start(void)
+ * @brief start the hrtim output (enable power conversion)
+ *
+ * @pre
+ * @post
+ */
+void pc_start(void);
+
+/**
+ * @fn void pc_stop(void)
+ * @brief stop the hrtim output (disable power conversion)
+ *
+ * @pre
+ * @post
+ */
+void pc_stop(void);
 
 #endif /* LIBS_POWER_CONVERTER_H_ */

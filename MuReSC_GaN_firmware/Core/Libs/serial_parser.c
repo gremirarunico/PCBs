@@ -136,7 +136,10 @@ bool serial_get_int(unsigned int position, int *valueReturn) {
 
 	// Read
 	bool returnStatus;
-	returnStatus = sscanf(substring, "%d", valueReturn);
+	double tmpIn;
+	//returnStatus = sscanf(substring, "%d", valueReturn);
+	returnStatus = sscanf(substring, "%lf", &tmpIn);
+	*valueReturn = (int)tmpIn;
 
 	free(substring);
 	return returnStatus;
@@ -145,12 +148,12 @@ bool serial_get_int(unsigned int position, int *valueReturn) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-// If I received an end command character we have done, we can parse the command
+	// If I received an end command character we have done, we can parse the command
 	if (swap_buffer == SP_END_COMMAND) {
 		serial_buffer.buffer[serial_buffer.index] = '\0';
 		serial_parser_received_command();
 	}
-// otherwise we have to add it to our local buffer
+	// otherwise we have to add it to our local buffer
 	else {
 		// We skip tabs or null chars or new-line in our buffer
 		if (swap_buffer != '\r' && swap_buffer != '\0' && swap_buffer != '\n') {
@@ -168,7 +171,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		}
 	}
 
-// Restart listening
+	// Restart listening
 	HAL_UART_Receive_IT(&hlpuart1, (uint8_t*) &swap_buffer, 1);
 }
 
