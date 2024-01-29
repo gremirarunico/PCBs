@@ -22,18 +22,84 @@
 
 #include <string.h>
 
-void test(void) {
-	if (serial_is_command("prova", 0)) {
-		serial_print("First command prova\n");
-		if (serial_is_command("e", 1)) {
-			serial_print("Second command e\n");
-			if (serial_is_command("camicia", 2)) {
-				serial_print("Third command is camicia\n");
+void clParser(void) {
+	int value = 0;
+	/*
+	 * SET
+	 */
+	if (serial_is_command("set", 0)) {
+		/*
+		 * FREQUENCY
+		 */
+		if (serial_is_command("frequency", 1)) {
+			if (serial_get_int(2, &value)) {
+				char *string[10];
+				sprintf(string, "Frequency: %d", value);
+				serial_print(string);
+			} else {
+				serial_print("Syntax error\n");
 			}
 		}
+		/*
+		 * DUTY
+		 */
+		if (serial_is_command("duty", 1)) {
+			if (serial_get_int(2, &value)) {
+				char *string[10];
+				sprintf(string, "Duty: %d", value);
+				serial_print(string);
+			} else {
+				serial_print("Syntax error\n");
+			}
+		}
+		/*
+		 * DEAT TIME
+		 */
+		if (serial_is_command("dt", 1)) {
+			if (serial_get_int(2, &value)) {
+				char *string[10];
+				sprintf(string, "Dead time: %d", value);
+				serial_print(string);
+			} else {
+				serial_print("Syntax error\n");
+			}
+		}
+		else {
+			serial_print("Syntax error\n");
+		}
 
-	} else if (serial_is_command("culo", 0)) {
-		serial_print("First command culo\n");
+	}
+	/*
+	 * GET
+	 */
+	else if (serial_is_command("get", 0)) {
+		/*
+		 * ALL
+		 */
+		if (serial_is_command("all", 1)) {
+			serial_print("A long print should be performed\n");
+		}
+	}
+
+	/*
+	 * START
+	 */
+	else if (serial_is_command("start", 0)) {
+		serial_print("Start converter\n");
+	}
+
+	/*
+	 * STOP
+	 */
+	else if (serial_is_command("stop", 0)) {
+		serial_print("Stop converter\n");
+	}
+
+	/*
+	 * ELSE
+	 */
+	else {
+		serial_print("Syntax error\n");
 	}
 
 }
@@ -72,7 +138,7 @@ void setup(void) {
 
 int i = 0;
 void loop(void) {
-	serial_parser_worker(&test);
+	serial_parser_worker(&clParser);
 	//		HAL_Delay(5000);
 	//		HAL_HRTIM_WaveformOutputStop(&hhrtim1,
 	//				HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1

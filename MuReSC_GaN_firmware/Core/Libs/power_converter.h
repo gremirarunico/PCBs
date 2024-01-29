@@ -8,6 +8,13 @@
 #ifndef LIBS_POWER_CONVERTER_H_
 #define LIBS_POWER_CONVERTER_H_
 
+/**
+ * @def PC_MINIMUM_COUNTER
+ * @brief the minimum value the comparator counter can manage (it depends on the micro)
+ *
+ */
+#define PC_MINIMUM_COUNTER 96
+
 #include "main.h"
 
 /*************************

@@ -18,7 +18,9 @@
 #include "serial_parser.h"
 #include "main.h"
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /**
  * Buffers
@@ -27,26 +29,11 @@ char swap_buffer; // single char buffer, used by the serial
 struct UartBuffer serial_buffer; // array of chars, used internally
 bool command_ready = 0; // we are ready to parse our command and to execute it
 
-/**
- * @fn void serial_parser_init(void)
- * @brief this function load the necessary things to run this library. You have to run once before while loop
- *
- * @pre
- * @post
- */
 void serial_parser_init() {
 	serial_buffer.index = 0;
 	HAL_UART_Receive_IT(&hlpuart1, (uint8_t*) &swap_buffer, 1);
 }
 
-/**
- * @fn void serial_parser_worker(void(*)(void))
- * @brief this function do the not sync job, bust be put in the main loop
- *
- * @pre
- * @post
- * @param external_command_worker it's a void function, the function that manages the the actions
- */
 void serial_parser_worker(void (*external_command_worker)(void)) {
 	// We can parse the command
 	if (command_ready) {
@@ -55,26 +42,12 @@ void serial_parser_worker(void (*external_command_worker)(void)) {
 	}
 }
 
-/**
- * @fn void serial_parser_received_command(void)
- * @brief decide what to do when a command is received
- *
- * @pre
- * @post
- */
 void serial_parser_received_command(void) {
 //	serial_print(serial_buffer.buffer);
 	serial_buffer.index = 0;
 	command_ready = 1;
 }
 
-/**
- * @fn void serial_buffer_overflow(void)
- * @brief This function manage what append in case of buffer overflow (simply prints an error and reset buffer)
- *
- * @pre
- * @post
- */
 void serial_buffer_overflow(void) {
 	serial_buffer.index = 0;
 	serial_buffer.buffer[0] = '\0';
@@ -82,17 +55,9 @@ void serial_buffer_overflow(void) {
 	serial_print("ERROR: buffer overflow, ignoring input...\t");
 }
 
-/**
- * @fn void serial_print(char*)
- * @brief Manage the serial output
- *
- * @pre
- * @post
- * @param outString
- */
 void serial_print(char *outString) {
 	//HAL_UART_Transmit_IT(&hlpuart1, outString, strlen(outString));
-	HAL_UART_Transmit(&hlpuart1, (uint8_t*)outString, strlen(outString), 10);
+	HAL_UART_Transmit(&hlpuart1, (uint8_t*) outString, strlen(outString), 10);
 }
 
 bool serial_is_command(char *command, unsigned int position) {
@@ -126,14 +91,58 @@ bool serial_is_command(char *command, unsigned int position) {
 	return true;
 }
 
-/**
- * @fn void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)
- * @brief Manage the interrupt, so it copy the buffer
- *
- * @pre
- * @post
- * @param huart
- */
+
+bool serial_get_int(unsigned int position, int *valueReturn) {
+	// Get the index beginning in the string of the command in the position position
+	unsigned int startIndex = 0;
+	for (unsigned int p = 0; p < position; p++) {
+		// While I don't get the separator command and we are not running out of our array, increment
+		while (serial_buffer.buffer[startIndex] != SP_SEPARATOR_COMMAND
+				&& startIndex < SP_LOCAL_BUFFER_SIZE) {
+			// If we get end of string we have no chance
+			if (serial_buffer.buffer[startIndex] == '\0')
+				return false;
+			startIndex++;
+		}
+		// Go ahead of one (we are on the SEPARATOR)
+		startIndex++;
+	}
+
+	// get the index of the ending of the string to parse
+	unsigned int endIndex = startIndex;
+	while (serial_buffer.buffer[endIndex] != SP_SEPARATOR_COMMAND
+			&& endIndex < SP_LOCAL_BUFFER_SIZE
+			&& serial_buffer.buffer[endIndex] != '\0') { // while not space or EOS or out buffer
+		endIndex++;
+	}
+	endIndex--;
+
+	// Silly check
+	if (endIndex < startIndex)
+		return false;
+
+	// Substring def
+	char *substring = malloc(sizeof(char) * (endIndex - startIndex + 2));
+	//char substring[10];
+	// check for errors in memory allocation
+	if (substring == NULL) {
+		serial_print("ERROR: memory can't be allocated");
+		return false;
+	}
+	for (unsigned int i = 0; i <= endIndex - startIndex; i++) {
+		substring[i] = serial_buffer.buffer[startIndex + i];
+	}
+	substring[endIndex - startIndex + 1] = '\0';
+
+	// Read
+	bool returnStatus;
+	returnStatus = sscanf(substring, "%d", valueReturn);
+
+	free(substring);
+	return returnStatus;
+
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 // If I received an end command character we have done, we can parse the command
