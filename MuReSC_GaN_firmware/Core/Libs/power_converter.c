@@ -2,7 +2,7 @@
 //#include <stdbool.h>
 #include "power_converter.h"
 
-struct WaveformParams waveform = { 13560000, 40, 50 };
+//struct WaveformParams waveform = { 13560000, 40, 50 };
 
 //struct RgstrPrmHRTIM cmp = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272, 4230 };
 
@@ -44,14 +44,26 @@ void pc_stop(void) {
 					+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
 }
 
-void pc_calculator_cmp(struct WaveformParams *waveform, struct RgstrPrmHRTIM *params){
+void pc_calculator_cmp(struct WaveformParams *waveform,
+		struct RgstrPrmHRTIM *params) {
 	// Calculate frequency as CLOCK/Frequency and is the number of tick for the register
-	unsigned int period = PC_HRTIM_EQ_CLK_FRQ/waveform->frequency;
+	unsigned int period = PC_HRTIM_EQ_CLK_FRQ / waveform->frequency;
 
+	// Check if period is even, if not make it even
+	if (period % 2 != 0) {
+		period++;
+	}
 
-	//params->period = period;
+	unsigned int dt = (unsigned long) PC_HRTIM_EQ_CLK_FRQ * waveform->deadTime / 1e6;
+
+	params->B2 = PC_MINIMUM_COUNTER;
+	params->A1 = PC_MINIMUM_COUNTER + dt;
+	params->A2 = PC_MINIMUM_COUNTER + period / 2;
+	params->B1 = PC_MINIMUM_COUNTER + period / 2 + dt;
+	params->period = period;
+
 }
 
-void pc_update(void){
-
+void pc_update(void) {
+	pc_set_cmps()
 }

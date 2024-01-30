@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+struct WaveformParams waveform = { 13560000, 40, 50 };
 struct RgstrPrmHRTIM cmp = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272, 4230 };
 
 void clParser(void) {

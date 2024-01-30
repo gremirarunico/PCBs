@@ -139,6 +139,9 @@ bool serial_get_int(unsigned int position, int *valueReturn) {
 	double tmpIn;
 	//returnStatus = sscanf(substring, "%d", valueReturn);
 	returnStatus = sscanf(substring, "%lf", &tmpIn);
+
+	// TODO check for overflow
+	// TODO ROUND
 	*valueReturn = (int)tmpIn;
 
 	free(substring);
