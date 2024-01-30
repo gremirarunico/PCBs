@@ -1,4 +1,5 @@
 #include "main.h"
+#include <math.h>
 //#include <stdbool.h>
 #include "power_converter.h"
 
@@ -35,13 +36,13 @@ void pc_start(void) {
 }
 
 void pc_stop(void) {
-	HAL_HRTIM_WaveformCounterStop(&hhrtim1,
-			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
-					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
 	HAL_HRTIM_WaveformOutputStop(&hhrtim1,
 			HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
 					+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
 					+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
+	HAL_HRTIM_WaveformCounterStop(&hhrtim1,
+			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
+					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
 }
 
 void pc_calculator_cmp(struct WaveformParams *waveform,
@@ -54,16 +55,35 @@ void pc_calculator_cmp(struct WaveformParams *waveform,
 		period++;
 	}
 
-	unsigned int dt = (unsigned long) PC_HRTIM_EQ_CLK_FRQ * waveform->deadTime / 1e6;
+	unsigned int dt = ceil(PC_HRTIM_EQ_CLK_FRQ * waveform->deadTime / 1e9);
 
 	params->B2 = PC_MINIMUM_COUNTER;
 	params->A1 = PC_MINIMUM_COUNTER + dt;
 	params->A2 = PC_MINIMUM_COUNTER + period / 2;
 	params->B1 = PC_MINIMUM_COUNTER + period / 2 + dt;
+	params->C1 = params->A1;
+	params->C2 = params->A2;
+	params->D1 = params->B1;
+	params->D2 = params->B2;
+
 	params->period = period;
 
 }
 
-void pc_update(void) {
-	pc_set_cmps()
+void pc_update(struct RgstrPrmHRTIM *params) {
+	pc_stop();
+
+	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].PERxR = params->period;
+	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].PERxR = params->period;
+	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_C].PERxR = params->period;
+	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].PERxR = params->period;
+	pc_set_cmps(params);
+
+	pc_start();
+
+	//HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].TIMxCR
+
+	// Enable update on reset timer A
+	//HAL_HRTIM_UpdateDisable
+	//HAL_HRTIM_UpdateEnable(&hhrtim1,HRTIM_TIMERUPDATE_A+HRTIM_TIMERUPDATE_B+HRTIM_TIMERUPDATE_C+HRTIM_TIMERUPDATE_D);
 }

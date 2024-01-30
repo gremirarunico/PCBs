@@ -22,8 +22,11 @@
 #include <stdbool.h>
 #include <string.h>
 
-struct WaveformParams waveform = { 13560000, 40, 50 };
-struct RgstrPrmHRTIM cmp = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272, 4230 };
+struct WaveformParams waveform = { 1250000, 40, 50 };
+struct RgstrPrmHRTIM htimpar = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272,
+		4230 };
+
+char *string[100];
 
 void clParser(void) {
 	int value = 0;
@@ -36,9 +39,9 @@ void clParser(void) {
 		 */
 		if (serial_is_command("frequency", 1)) {
 			if (serial_get_int(2, &value)) {
-				char *string[10];
 				sprintf(string, "Frequency: %d", value);
 				serial_print(string);
+				waveform.frequency = value;
 			} else {
 				serial_print("Syntax error\n");
 			}
@@ -48,9 +51,9 @@ void clParser(void) {
 		 */
 		else if (serial_is_command("duty", 1)) {
 			if (serial_get_int(2, &value)) {
-				char *string[10];
 				sprintf(string, "Duty: %d", value);
 				serial_print(string);
+				waveform.dutyCycle = value;
 			} else {
 				serial_print("Syntax error\n");
 			}
@@ -60,14 +63,13 @@ void clParser(void) {
 		 */
 		else if (serial_is_command("dt", 1)) {
 			if (serial_get_int(2, &value)) {
-				char *string[10];
-				sprintf(string, "Dead time: %d", value);
+				sprintf(string, "Dead time: %d ns", value);
 				serial_print(string);
+				waveform.deadTime = value;
 			} else {
 				serial_print("Syntax error\n");
 			}
-		}
-		else {
+		} else {
 			serial_print("Syntax error\n");
 		}
 
@@ -80,22 +82,41 @@ void clParser(void) {
 		 * ALL
 		 */
 		if (serial_is_command("all", 1)) {
-			serial_print("A long print should be performed\n");
+			sprintf(string, "F: %d Hz, DT: %d ns, Duty: %d%%",
+					waveform.frequency, waveform.deadTime, waveform.dutyCycle);
+			serial_print(string);
+
+			sprintf(string,
+					"P: %d, A1: %d, A2: %d, B1: %d, B2: %d, C1: %d, C2: %d, D1: %d, D2: %d",
+					htimpar.period, htimpar.A1, htimpar.A2, htimpar.B1,
+					htimpar.B2, htimpar.C1, htimpar.C2, htimpar.D1, htimpar.D2);
+			serial_print(string);
 		}
+	}
+
+	/*
+	 * UPDATE
+	 */
+	else if (serial_is_command("update", 0)) {
+		pc_calculator_cmp(&waveform, &htimpar);
+		pc_update(&htimpar);
+		serial_print("Update sent\n");
 	}
 
 	/*
 	 * START
 	 */
 	else if (serial_is_command("start", 0)) {
-		serial_print("Start converter\n");
+		pc_start();
+		serial_print("Converter started\n");
 	}
 
 	/*
 	 * STOP
 	 */
 	else if (serial_is_command("stop", 0)) {
-		serial_print("Stop converter\n");
+		pc_stop();
+		serial_print("Converter stopped\n");
 	}
 
 	/*
@@ -110,15 +131,14 @@ void clParser(void) {
 void setup(void) {
 	serial_parser_init();
 
-	pc_set_cmps(&cmp);
-	pc_start();
+	pc_calculator_cmp(&waveform, &htimpar);
+	pc_update(&htimpar);
 }
-
 
 void loop(void) {
 	serial_parser_worker(&clParser);
 
-	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin)) { // reads GPIO User Button status
+	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin)) {
 
 		HAL_Delay(200);
 	}

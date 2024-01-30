@@ -80,4 +80,14 @@ void pc_start(void);
  */
 void pc_stop(void);
 
+/**
+ * @fn void pc_update(struct RgstrPrmHRTIM*)
+ * @brief
+ *
+ * @pre
+ * @post
+ * @param params
+ */
+void pc_update(struct RgstrPrmHRTIM *params);
+
 #endif /* LIBS_POWER_CONVERTER_H_ */
