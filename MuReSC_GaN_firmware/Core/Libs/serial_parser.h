@@ -20,7 +20,7 @@
 #ifndef LIBS_SERIAL_PARSER_H_
 #define LIBS_SERIAL_PARSER_H_
 
-#define SP_LOCAL_BUFFER_SIZE 20
+#define SP_LOCAL_BUFFER_SIZE 50
 #define SP_END_COMMAND '\r'
 #define SP_SEPARATOR_COMMAND ' '
 
@@ -85,6 +85,15 @@ void serial_buffer_overflow(void);
  * @param outString
  */
 void serial_print(char *outString);
+
+/**
+ * @fn void serial_nl(void)
+ * @brief print a new line in the serial output
+ *
+ * @pre
+ * @post
+ */
+void serial_nl(void);
 
 /**
  * @fn bool serial_is_command(char*, unsigned int)

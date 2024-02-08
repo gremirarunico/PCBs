@@ -25,6 +25,7 @@
 struct WaveformParams waveform = { 1250000, 40, 50 };
 struct RgstrPrmHRTIM htimpar = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272,
 		4230 };
+bool danger = 0;
 
 char *string[100];
 
@@ -37,13 +38,20 @@ void clParser(void) {
 		/*
 		 * FREQUENCY
 		 */
-		if (serial_is_command("frequency", 1)) {
+		if (serial_is_command("freq", 1)) {
 			if (serial_get_int(2, &value)) {
 				sprintf(string, "Frequency: %d", value);
 				serial_print(string);
-				waveform.frequency = value;
+				serial_nl();
+				if (value <= 8e6)
+					waveform.frequency = value;
+				else {
+					serial_print("Refused, not valid");
+					serial_nl();
+				}
 			} else {
-				serial_print("Syntax error\n");
+				serial_print("Syntax error");
+				serial_nl();
 			}
 		}
 		/*
@@ -53,9 +61,11 @@ void clParser(void) {
 			if (serial_get_int(2, &value)) {
 				sprintf(string, "Duty: %d", value);
 				serial_print(string);
+				serial_nl();
 				waveform.dutyCycle = value;
 			} else {
-				serial_print("Syntax error\n");
+				serial_print("Syntax error");
+				serial_nl();
 			}
 		}
 		/*
@@ -65,14 +75,85 @@ void clParser(void) {
 			if (serial_get_int(2, &value)) {
 				sprintf(string, "Dead time: %d ns", value);
 				serial_print(string);
-				waveform.deadTime = value;
+				serial_nl();
+				if (value > 10)
+					waveform.deadTime = value;
+				else {
+					serial_print("Refused, not valid");
+					serial_nl();
+				}
 			} else {
-				serial_print("Syntax error\n");
+				serial_print("Syntax error");
+				serial_nl();
 			}
-		} else {
-			serial_print("Syntax error\n");
 		}
 
+		/*
+		 * REGISTER
+		 */
+		else if (serial_is_command("reg", 1)) {
+			if (danger) {
+				// { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272, 4230 };
+				if (serial_get_int(2, &value)) {
+					htimpar.period = value;
+				} else {
+					serial_print("Error getting period");
+					serial_nl();
+				}
+				if (serial_get_int(3, &value)) {
+					htimpar.A1 = value;
+				} else {
+					serial_print("Error getting A1");
+					serial_nl();
+				}
+				if (serial_get_int(4, &value)) {
+					htimpar.A2 = value;
+				} else {
+					serial_print("Error getting A2");
+					serial_nl();
+				}
+				if (serial_get_int(5, &value)) {
+					htimpar.B1 = value;
+				} else {
+					serial_print("Error getting B1");
+					serial_nl();
+				}
+				if (serial_get_int(6, &value)) {
+					htimpar.B2 = value;
+				} else {
+					serial_print("Error getting B2");
+					serial_nl();
+				}
+				if (serial_get_int(7, &value)) {
+					htimpar.C1 = value;
+				} else {
+					serial_print("Error getting C1");
+					serial_nl();
+				}
+				if (serial_get_int(8, &value)) {
+					htimpar.C2 = value;
+				} else {
+					serial_print("Error getting C2");
+					serial_nl();
+				}
+				if (serial_get_int(9, &value)) {
+					htimpar.D1 = value;
+				} else {
+					serial_print("Error getting D1");
+					serial_nl();
+				}
+				if (serial_get_int(10, &value)) {
+					htimpar.D2 = value;
+				} else {
+					serial_print("Error getting D2");
+					serial_nl();
+				}
+
+			} else {
+				serial_print("Enable danger mode");
+				serial_nl();
+			}
+		}
 	}
 	/*
 	 * GET
@@ -85,12 +166,14 @@ void clParser(void) {
 			sprintf(string, "F: %d Hz, DT: %d ns, Duty: %d%%",
 					waveform.frequency, waveform.deadTime, waveform.dutyCycle);
 			serial_print(string);
+			serial_nl();
 
 			sprintf(string,
 					"P: %d, A1: %d, A2: %d, B1: %d, B2: %d, C1: %d, C2: %d, D1: %d, D2: %d",
 					htimpar.period, htimpar.A1, htimpar.A2, htimpar.B1,
 					htimpar.B2, htimpar.C1, htimpar.C2, htimpar.D1, htimpar.D2);
 			serial_print(string);
+			serial_nl();
 		}
 	}
 
@@ -98,9 +181,14 @@ void clParser(void) {
 	 * UPDATE
 	 */
 	else if (serial_is_command("update", 0)) {
-		pc_calculator_cmp(&waveform, &htimpar);
-		pc_update(&htimpar);
-		serial_print("Update sent\n");
+		if (danger) {
+			pc_update(&htimpar);
+		} else {
+			pc_calculator_cmp(&waveform, &htimpar);
+			pc_update(&htimpar);
+		}
+		serial_print("Update sent");
+		serial_nl();
 	}
 
 	/*
@@ -108,7 +196,8 @@ void clParser(void) {
 	 */
 	else if (serial_is_command("start", 0)) {
 		pc_start();
-		serial_print("Converter started\n");
+		serial_print("Converter started");
+		serial_nl();
 	}
 
 	/*
@@ -116,14 +205,34 @@ void clParser(void) {
 	 */
 	else if (serial_is_command("stop", 0)) {
 		pc_stop();
-		serial_print("Converter stopped\n");
+		serial_print("Converter stopped");
+		serial_nl();
+	}
+
+	/*
+	 * DANGER
+	 */
+	else if (serial_is_command("danger", 0)) {
+		if (serial_is_command("enable", 1)) {
+			danger = 1;
+			serial_print("Danger mode enabled");
+			serial_nl();
+		} else if (serial_is_command("disable", 1)) {
+			danger = 0;
+			serial_print("Danger mode disabled");
+			serial_nl();
+		} else {
+			serial_print("Syntax error");
+			serial_nl();
+		}
 	}
 
 	/*
 	 * ELSE
 	 */
 	else {
-		serial_print("Syntax error\n");
+		serial_print("Syntax error");
+		serial_nl();
 	}
 
 }
@@ -139,8 +248,11 @@ void loop(void) {
 	serial_parser_worker(&clParser);
 
 	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin)) {
-
-		HAL_Delay(200);
+//		pc_stop();
+		HAL_Delay(2000);
+//		pc_start();
+//		HAL_Delay(1);
+//		pc_stop();
 	}
 
 }

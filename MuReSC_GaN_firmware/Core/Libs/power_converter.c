@@ -26,13 +26,13 @@ void pc_set_cmps(struct RgstrPrmHRTIM *params) {
 }
 
 void pc_start(void) {
+	HAL_HRTIM_WaveformCounterStart(&hhrtim1,
+			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
+					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
 	HAL_HRTIM_WaveformOutputStart(&hhrtim1,
 			HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
 					+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
 					+ HRTIM_OUTPUT_TD1 + HRTIM_OUTPUT_TD2);
-	HAL_HRTIM_WaveformCounterStart(&hhrtim1,
-			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
-					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
 }
 
 void pc_stop(void) {

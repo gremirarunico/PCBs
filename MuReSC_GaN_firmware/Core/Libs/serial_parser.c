@@ -60,6 +60,10 @@ void serial_print(char *outString) {
 	HAL_UART_Transmit(&hlpuart1, (uint8_t*) outString, strlen(outString), 10);
 }
 
+void serial_nl(void){
+	serial_print("\n\r");
+}
+
 bool serial_is_command(char *command, unsigned int position) {
 	// Get the index beginning in the string of the command in the position position
 	unsigned int startIndex = 0;
