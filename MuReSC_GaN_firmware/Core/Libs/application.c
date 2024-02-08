@@ -17,6 +17,7 @@
 #include "application.h"
 #include "serial_parser.h"
 #include "power_converter.h"
+#include "feedback.h"
 #include "main.h"
 //#include <stdio.h>
 #include <stdbool.h>
@@ -175,6 +176,23 @@ void clParser(void) {
 			serial_print(string);
 			serial_nl();
 		}
+		/*
+		 * VIN
+		 */
+		else if (serial_is_command("vin", 1)) {
+			HAL_ADC_Start_IT(&hadc1);
+			sprintf(string, "Vout = %d", fb_adc_out);
+			serial_print(string);
+			serial_nl();
+		}
+		/*
+		 * VOUT
+		 */
+		else if (serial_is_command("vout", 1)) {
+			sprintf(string, "Vout = %d", fb_adc_in);
+			serial_print(string);
+			serial_nl();
+		}
 	}
 
 	/*
@@ -242,6 +260,8 @@ void setup(void) {
 
 	pc_calculator_cmp(&waveform, &htimpar);
 	pc_update(&htimpar);
+
+	feedback_init();
 }
 
 void loop(void) {
