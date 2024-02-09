@@ -1,7 +1,9 @@
 #include "main.h"
 #include <math.h>
-//#include <stdbool.h>
+#include <stdbool.h>
 #include "power_converter.h"
+
+bool pc_output_status = 0;
 
 //struct WaveformParams waveform = { 13560000, 40, 50 };
 
@@ -26,6 +28,7 @@ void pc_set_cmps(struct RgstrPrmHRTIM *params) {
 }
 
 void pc_start(void) {
+	pc_output_status = 1;
 	HAL_HRTIM_WaveformCounterStart(&hhrtim1,
 			HRTIM_TIMERID_TIMER_A + HRTIM_TIMERID_TIMER_B
 					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
@@ -36,6 +39,7 @@ void pc_start(void) {
 }
 
 void pc_stop(void) {
+	pc_output_status = 0;
 	HAL_HRTIM_WaveformOutputStop(&hhrtim1,
 			HRTIM_OUTPUT_TA1 + HRTIM_OUTPUT_TA2 + HRTIM_OUTPUT_TB1
 					+ HRTIM_OUTPUT_TB2 + HRTIM_OUTPUT_TC1 + HRTIM_OUTPUT_TC2
@@ -46,7 +50,7 @@ void pc_stop(void) {
 }
 
 void pc_calculator_cmp(struct WaveformParams *waveform,
-		struct RgstrPrmHRTIM *params) {
+	struct RgstrPrmHRTIM *params) {
 	// Calculate frequency as CLOCK/Frequency and is the number of tick for the register
 	unsigned int period = PC_HRTIM_EQ_CLK_FRQ / waveform->frequency;
 
@@ -71,7 +75,7 @@ void pc_calculator_cmp(struct WaveformParams *waveform,
 }
 
 void pc_update(struct RgstrPrmHRTIM *params) {
-	pc_stop();
+//	pc_stop();
 
 	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].PERxR = params->period;
 	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_B].PERxR = params->period;
@@ -79,7 +83,7 @@ void pc_update(struct RgstrPrmHRTIM *params) {
 	HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_D].PERxR = params->period;
 	pc_set_cmps(params);
 
-	pc_start();
+//	pc_start();
 
 	//HRTIM1->sTimerxRegs[HRTIM_TIMERINDEX_TIMER_A].TIMxCR
 

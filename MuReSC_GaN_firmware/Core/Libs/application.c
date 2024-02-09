@@ -180,8 +180,8 @@ void clParser(void) {
 		 * VIN
 		 */
 		else if (serial_is_command("vin", 1)) {
-			HAL_ADC_Start_IT(&hadc1);
-			sprintf(string, "Vout = %d", fb_adc_out);
+			HAL_ADC_Start_IT(&hadc2);
+			sprintf(string, "Vin = %d", fb_adc_in);
 			serial_print(string);
 			serial_nl();
 		}
@@ -189,7 +189,8 @@ void clParser(void) {
 		 * VOUT
 		 */
 		else if (serial_is_command("vout", 1)) {
-			sprintf(string, "Vout = %d", fb_adc_in);
+			HAL_ADC_Start_IT(&hadc1);
+			sprintf(string, "Vout = %d", fb_adc_out);
 			serial_print(string);
 			serial_nl();
 		}
@@ -199,12 +200,14 @@ void clParser(void) {
 	 * UPDATE
 	 */
 	else if (serial_is_command("update", 0)) {
+		pc_stop();
 		if (danger) {
 			pc_update(&htimpar);
 		} else {
 			pc_calculator_cmp(&waveform, &htimpar);
 			pc_update(&htimpar);
 		}
+		pc_start();
 		serial_print("Update sent");
 		serial_nl();
 	}
@@ -268,7 +271,11 @@ void loop(void) {
 	serial_parser_worker(&clParser);
 
 	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin)) {
-//		pc_stop();
+		if (pc_output_status) {
+			pc_stop();
+		} else {
+			pc_start();
+		}
 		HAL_Delay(2000);
 //		pc_start();
 //		HAL_Delay(1);

@@ -39,6 +39,7 @@ void feedback_init(void) {
 
 	// Start ADC conversion
 	HAL_ADC_Start_IT(&hadc1);
+	HAL_ADC_Start_IT(&hadc2);
 //	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) fb_adc_in , 1);
 
 }
@@ -46,7 +47,7 @@ void feedback_init(void) {
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
 	fb_adc_out = HAL_ADC_GetValue(&hadc1);
+	fb_adc_in = HAL_ADC_GetValue(&hadc2);
 	serial_print("ADC READ");
 	serial_nl();
-	fb_adc_in = 0;
 }

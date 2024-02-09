@@ -18,11 +18,13 @@
 #define PC_HRTIM_EQ_CLK_FRQ 5.44e9 // 5.44G Hz
 
 #include "main.h"
+#include <stdbool.h>
 
 /**
  * Handler for high resolution timer
  */
 extern HRTIM_HandleTypeDef hhrtim1;
+extern bool pc_output_status;
 
 /*************************
  * @struct
