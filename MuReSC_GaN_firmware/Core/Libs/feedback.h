@@ -1,20 +1,20 @@
 /**
-  ******************************************************************************
-  * @file           : feedback.h
-  * @brief          : Header for feedback.c file.
-  *                   This file contains the common defines for sensing.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 Marco Guerrini.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : feedback.h
+ * @brief          : Header for feedback.c file.
+ *                   This file contains the common defines for sensing.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 Marco Guerrini.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 #include "main.h"
 
 #ifndef LIBS_FEEDBACK_H_
@@ -35,14 +35,29 @@
  */
 #define FB_OUT_RATIO 741/10741
 
+#define FB_ADC_MAX_VALUE 4095
+#define FB_ADC_MAX_VOLTAGE 3.3
+
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 extern COMP_HandleTypeDef hcomp1;
 extern COMP_HandleTypeDef hcomp2;
 
+extern TIM_HandleTypeDef htim1;
+
 extern uint16_t fb_adc_out;
 extern uint16_t fb_adc_in;
 
+extern int fb_adc_cal_off_out;
+extern int fb_adc_cal_off_in;
+
+extern uint16_t fb_adc_out_target;
+
+typedef enum {
+	OPEN_LOOP, ON_OFF
+} fb_mode_t;
+
+extern fb_mode_t fb_mode;
 
 #endif /* LIBS_FEEDBACK_H_ */

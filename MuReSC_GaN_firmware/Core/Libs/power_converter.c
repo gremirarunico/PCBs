@@ -49,7 +49,7 @@ void pc_stop(void) {
 					+ HRTIM_TIMERID_TIMER_C + HRTIM_TIMERID_TIMER_D);
 }
 
-void pc_calculator_cmp(struct WaveformParams *waveform,
+void pc_calculator_cmp_mono_resonant(struct WaveformParams *waveform,
 	struct RgstrPrmHRTIM *params) {
 	// Calculate frequency as CLOCK/Frequency and is the number of tick for the register
 	unsigned int period = PC_HRTIM_EQ_CLK_FRQ / waveform->frequency;

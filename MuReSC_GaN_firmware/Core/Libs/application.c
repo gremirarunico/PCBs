@@ -77,12 +77,60 @@ void clParser(void) {
 				sprintf(string, "Dead time: %d ns", value);
 				serial_print(string);
 				serial_nl();
-				if (value > 10)
+				if (value >= 6)
 					waveform.deadTime = value;
 				else {
 					serial_print("Refused, not valid");
 					serial_nl();
 				}
+			} else {
+				serial_print("Syntax error");
+				serial_nl();
+			}
+		}
+		/*
+		 * CONTROL
+		 */
+		else if (serial_is_command("ctrl", 1)) {
+			// Open loop control
+			if (serial_is_command("ol", 2)) {
+				pc_stop();
+				fb_mode = OPEN_LOOP;
+				serial_print(
+						"Open loop mode, for safety the converter is stopped");
+				serial_nl();
+			}
+			// On - Off
+			else if (serial_is_command("oo", 2)) {
+				fb_mode = ON_OFF;
+				serial_print("On-Off mode");
+				serial_nl();
+			}
+
+			// Advanced
+			else if (serial_is_command("advanced", 2)) {
+				// TODO
+				serial_print("Not yet implemented");
+				serial_nl();
+			} else {
+				serial_print("Syntax error");
+				serial_nl();
+			}
+		}
+
+		/*
+		 * Vout target
+		 */
+		else if (serial_is_command("vout", 1)) {
+			if (serial_get_int(2, &value)) {
+
+				fb_adc_out_target = value * FB_ADC_MAX_VALUE * FB_IN_RATIO
+						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_cal_off_out;
+
+				sprintf(string, "Vout set to: %d mV, Target: %d, Offset: %d",
+						value, fb_adc_out_target, fb_adc_cal_off_out);
+				serial_print(string);
+				serial_nl();
 			} else {
 				serial_print("Syntax error");
 				serial_nl();
@@ -154,6 +202,9 @@ void clParser(void) {
 				serial_print("Enable danger mode");
 				serial_nl();
 			}
+		} else {
+			serial_print("Syntax error");
+			serial_nl();
 		}
 	}
 	/*
@@ -180,7 +231,7 @@ void clParser(void) {
 		 * VIN
 		 */
 		else if (serial_is_command("vin", 1)) {
-			HAL_ADC_Start_IT(&hadc2);
+			//HAL_ADC_Start_IT(&hadc2);
 			sprintf(string, "Vin = %d", fb_adc_in);
 			serial_print(string);
 			serial_nl();
@@ -189,7 +240,7 @@ void clParser(void) {
 		 * VOUT
 		 */
 		else if (serial_is_command("vout", 1)) {
-			HAL_ADC_Start_IT(&hadc1);
+			//HAL_ADC_Start_IT(&hadc1);
 			sprintf(string, "Vout = %d", fb_adc_out);
 			serial_print(string);
 			serial_nl();
@@ -204,7 +255,7 @@ void clParser(void) {
 		if (danger) {
 			pc_update(&htimpar);
 		} else {
-			pc_calculator_cmp(&waveform, &htimpar);
+			pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
 			pc_update(&htimpar);
 		}
 		pc_start();
@@ -247,6 +298,50 @@ void clParser(void) {
 			serial_nl();
 		}
 	}
+	/*
+	 * CALIBRATION
+	 */
+	else if (serial_is_command("calibrate", 0)) {
+		if (serial_is_command("vin", 1)) {
+			// calibration of vin procedure
+			if (serial_get_int(2, &value)) {
+				// calibrate here
+				fb_adc_cal_off_in = value * FB_ADC_MAX_VALUE * FB_IN_RATIO
+						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_in;
+
+				sprintf(string,
+						"Offset: %d, True: %d mv, Read: %d, Corrected: %d",
+						fb_adc_cal_off_in, value, fb_adc_in,
+						fb_adc_in + fb_adc_cal_off_in);
+				serial_print(string);
+				serial_nl();
+
+			} else {
+				serial_print("Error getting calibration Vin");
+				serial_nl();
+			}
+		} else if (serial_is_command("vout", 1)) {
+			// calibration of vout procedure
+			if (serial_get_int(2, &value)) {
+				// calibrate here
+				fb_adc_cal_off_out = value * FB_ADC_MAX_VALUE * FB_OUT_RATIO
+						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_out;
+
+				sprintf(string,
+						"Offset: %d, True: %d mv, Read: %d, Corrected: %d",
+						fb_adc_cal_off_out, value, fb_adc_out,
+						fb_adc_out + fb_adc_cal_off_out);
+				serial_print(string);
+				serial_nl();
+			} else {
+				serial_print("Error getting calibration Vout");
+				serial_nl();
+			}
+		} else {
+			serial_print("Syntax error");
+			serial_nl();
+		}
+	}
 
 	/*
 	 * ELSE
@@ -261,7 +356,7 @@ void clParser(void) {
 void setup(void) {
 	serial_parser_init();
 
-	pc_calculator_cmp(&waveform, &htimpar);
+	pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
 	pc_update(&htimpar);
 
 	feedback_init();
