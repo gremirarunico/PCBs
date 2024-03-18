@@ -5,7 +5,10 @@
 
 bool pc_output_status = 0;
 
-//struct WaveformParams waveform = { 13560000, 40, 50 };
+//pc_mode_t pc_mode = MONO_RESONANT;
+pc_mode_t pc_mode = MULTI_RESONANT;
+
+//struct WaveformParams waveform = { 13560000, 40, 50, 0 };
 
 //struct RgstrPrmHRTIM cmp = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272, 4230 };
 
@@ -69,6 +72,36 @@ void pc_calculator_cmp_mono_resonant(struct WaveformParams *waveform,
 	params->C2 = params->A2;
 	params->D1 = params->B1;
 	params->D2 = params->B2;
+
+	params->period = period;
+
+}
+
+void pc_calculator_cmp_multi_resonant(struct WaveformParams *waveform,
+	struct RgstrPrmHRTIM *params) {
+	// Calculate frequency as CLOCK/Frequency and is the number of tick for the register
+	unsigned int period = PC_HRTIM_EQ_CLK_FRQ / waveform->frequency;
+
+	// Check if period is even, if not make it even
+	if (period % 2 != 0) {
+		period++;
+	}
+
+	unsigned int dt = ceil(PC_HRTIM_EQ_CLK_FRQ * waveform->deadTime / 1e9);
+	//TODO
+//	unsigned int adddt = ceil(PC_HRTIM_EQ_CLK_FRQ * 40 / 1e9);
+//	unsigned int adddt = ceil(PC_HRTIM_EQ_CLK_FRQ * 20 / 1e9);
+	unsigned int adddt = ceil(PC_HRTIM_EQ_CLK_FRQ * waveform->aDeadTime / 1e9);
+
+	params->B2 = PC_MINIMUM_COUNTER;
+	params->A1 = PC_MINIMUM_COUNTER + dt;
+	params->A2 = PC_MINIMUM_COUNTER + period / 2;
+
+	params->B1 = PC_MINIMUM_COUNTER + period / 2 + dt;
+	params->C1 = PC_MINIMUM_COUNTER + dt;
+	params->C2 = PC_MINIMUM_COUNTER + period / 2;
+	params->D1 = PC_MINIMUM_COUNTER + period / 2 + dt + adddt;
+	params->D2 = PC_MINIMUM_COUNTER;
 
 	params->period = period;
 

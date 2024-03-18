@@ -16,6 +16,7 @@
 #define PC_MINIMUM_COUNTER 96
 #define PC_MAXIMUS_COUNTER 65503
 #define PC_HRTIM_EQ_CLK_FRQ 5.44e9 // 5.44G Hz
+#define PC_MINIMUM_DT 20
 
 #include "main.h"
 #include <stdbool.h>
@@ -26,6 +27,12 @@
 extern HRTIM_HandleTypeDef hhrtim1;
 extern bool pc_output_status;
 
+typedef enum {
+	MONO_RESONANT, MULTI_RESONANT
+} pc_mode_t;
+
+extern pc_mode_t pc_mode;
+
 /*************************
  * @struct
  * @brief contains all the important informations about waveforms for the MuReSC converter
@@ -35,6 +42,7 @@ struct WaveformParams {
 	unsigned int frequency;
 	unsigned int deadTime;
 	unsigned int dutyCycle;
+	unsigned int aDeadTime;
 };
 
 /**
@@ -91,5 +99,11 @@ void pc_stop(void);
  * @param params
  */
 void pc_update(struct RgstrPrmHRTIM *params);
+
+void pc_calculator_cmp_mono_resonant(struct WaveformParams *waveform,
+		struct RgstrPrmHRTIM *params);
+
+void pc_calculator_cmp_multi_resonant(struct WaveformParams *waveform,
+		struct RgstrPrmHRTIM *params);
 
 #endif /* LIBS_POWER_CONVERTER_H_ */

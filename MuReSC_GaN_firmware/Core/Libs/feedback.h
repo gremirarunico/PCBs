@@ -60,4 +60,9 @@ typedef enum {
 
 extern fb_mode_t fb_mode;
 
+void feedback_init(void);
+void fb_handler_oo(void);
+float fb_get_adc_out(void);
+float fb_get_adc_in(void);
+
 #endif /* LIBS_FEEDBACK_H_ */

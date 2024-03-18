@@ -23,7 +23,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-struct WaveformParams waveform = { 1250000, 40, 50 };
+struct WaveformParams waveform = { 1250000, 40, 50, 20 };
+//struct WaveformParams waveform = { 1250000, 20, 50 };
 struct RgstrPrmHRTIM htimpar = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272,
 		4230 };
 bool danger = 0;
@@ -77,12 +78,27 @@ void clParser(void) {
 				sprintf(string, "Dead time: %d ns", value);
 				serial_print(string);
 				serial_nl();
-				if (value >= 6)
+				if (value >= PC_MINIMUM_DT)
 					waveform.deadTime = value;
 				else {
 					serial_print("Refused, not valid");
 					serial_nl();
 				}
+			} else {
+				serial_print("Syntax error");
+				serial_nl();
+			}
+		}
+
+		/*
+		 * ADDITIONAL DEAT TIME
+		 */
+		else if (serial_is_command("adt", 1)) {
+			if (serial_get_int(2, &value)) {
+				sprintf(string, "Additional dead time: %d ns", value);
+				serial_print(string);
+				serial_nl();
+				waveform.aDeadTime = value;
 			} else {
 				serial_print("Syntax error");
 				serial_nl();
@@ -113,6 +129,37 @@ void clParser(void) {
 				serial_print("Not yet implemented");
 				serial_nl();
 			} else {
+				serial_print("Syntax error");
+				serial_nl();
+			}
+		}
+
+		/*
+		 * RESONANT MODE
+		 */
+		else if (serial_is_command("mode", 1)) {
+			// mono resonant mode
+			if (serial_is_command("mono", 2)) {
+				pc_stop();
+				pc_mode = MONO_RESONANT;
+				pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
+				pc_update(&htimpar);
+				serial_print(
+						"Mono resonant mode, for safety the converter is stopped");
+				serial_nl();
+			}
+			// multi resoant mode
+			else if (serial_is_command("multi", 2)) {
+				pc_stop();
+				pc_mode = MULTI_RESONANT;
+				pc_calculator_cmp_multi_resonant(&waveform, &htimpar);
+				pc_update(&htimpar);
+				serial_print(
+						"Multi resonant mode, for safety the converter is stopped");
+				serial_nl();
+			}
+
+			else {
 				serial_print("Syntax error");
 				serial_nl();
 			}
@@ -255,7 +302,11 @@ void clParser(void) {
 		if (danger) {
 			pc_update(&htimpar);
 		} else {
-			pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
+			if (pc_mode == MONO_RESONANT) {
+				pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
+			} else if (pc_mode == MULTI_RESONANT) {
+				pc_calculator_cmp_multi_resonant(&waveform, &htimpar);
+			}
 			pc_update(&htimpar);
 		}
 		pc_start();
@@ -356,7 +407,11 @@ void clParser(void) {
 void setup(void) {
 	serial_parser_init();
 
-	pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
+	if (pc_mode == MONO_RESONANT) {
+		pc_calculator_cmp_mono_resonant(&waveform, &htimpar);
+	} else if (pc_mode == MULTI_RESONANT) {
+		pc_calculator_cmp_multi_resonant(&waveform, &htimpar);
+	}
 	pc_update(&htimpar);
 
 	feedback_init();
