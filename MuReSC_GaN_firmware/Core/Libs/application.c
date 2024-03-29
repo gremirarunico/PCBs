@@ -262,8 +262,8 @@ void clParser(void) {
 		 * ALL
 		 */
 		if (serial_is_command("all", 1)) {
-			sprintf(string, "F: %d Hz, DT: %d ns, Duty: %d%%",
-					waveform.frequency, waveform.deadTime, waveform.dutyCycle);
+			sprintf(string, "F: %d Hz, DT: %d ns, ADT: %d Duty: %d%%",
+					waveform.frequency, waveform.deadTime, waveform.aDeadTime, waveform.dutyCycle);
 			serial_print(string);
 			serial_nl();
 
