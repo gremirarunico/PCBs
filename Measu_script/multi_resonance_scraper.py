@@ -44,9 +44,10 @@ rm = pyvisa.ResourceManager()
 rm.list_resources()
 
 powerSupply = rm.open_resource('USB0::0x05E6::0x2230::802901012757210041::0::INSTR')
-oscilloscope = rm.open_resource('USB0::0x0699::0x0411::C020941::0::INSTR')
+#oscilloscope = rm.open_resource('USB0::0x0699::0x0411::C020941::0::INSTR')
+oscilloscope = rm.open_resource('USB0::0x0699::0x052C::C031466::0::INSTR')
 multimeter = rm.open_resource('USB0::0x05E6::0x7510::04479984::0::INSTR')
-powerConverter = serial.Serial(port="COM5", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+powerConverter = serial.Serial(port="COM3", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
 
 powerSupplyResponse = "Keithley instruments, 2230G-30-6, 802901012757210041, 1.01-1.07\n"
@@ -102,10 +103,29 @@ else:
     
 
 # Configure oscilloscope
-time.sleep(1)
-oscilloscope.write("MEASU:MEAS1:TYP RMS")
-oscilloscope.write("MEASUrement:MEAS1:SOUrce2")
-time.sleep(1)
+# Configure Oscilloscope
+oscilloscope.write("*RST")
+time.sleep(0.1)
+oscilloscope.write("SELect:CH1 ON")
+oscilloscope.write("SELect:CH2 ON")
+time.sleep(0.1)
+
+oscilloscope.write("HORizontal:SCAle 2e-6")
+time.sleep(0.1)
+
+oscilloscope.write("CH1:SCAle 10")
+oscilloscope.write("CH2:SCAle 10")
+time.sleep(0.1)
+
+oscilloscope.write("MEASUrement:MEAS1:STATE ON")
+oscilloscope.write("MEASUrement:MEAS1:SOUrce CH2")
+time.sleep(0.1)
+oscilloscope.write("MEASUrement:MEAS1:TYP RMS")
+time.sleep(0.1)
+oscilloscope.query("MEASUrement:MEAS1:VALue?")
+
+
+# Start PC
 powerConverter.write(b"start \r\n")
 print(powerConverter.readline())
 time.sleep(2)
@@ -144,39 +164,11 @@ for dt in range(20, 61, 1):
         writer.writerows(dataStored)
         dataStored = []
 time.sleep(2)
+
 powerConverter.write(b"stop \r\n")
 print(powerConverter.readline())
+
+
 print(powerSupply.write("*RST"))
-
-
-
 
 f.close()
-
-exit(0)
-"""
-repr()
-print(powerSupply.write("*RST"))
-#Configurazione
-print(powerSupply.write("APPL CH1, 18.0, 1.0"))
-print(powerSupply.write("APPL CH2, 30.0, 6.0"))
-print(powerSupply.write("APPL CH3, 5.0, 1.0"))
-
-# check volt MEAS:VOLT? ALL 
-# check volt MEAS:POWER? ALL 
-# 0, 0, 1.20145
-
-print(powerSupply.write("OUTP ON"))
-
-#Get data
-MEASU:MEAS1:TYP RMS
-MEASUrement:MEAS1:SOUrce2
-MEASUrement:MEAS1:VALue?
-#print(powerSupply.query("FETCh[:SCALar]:POWer[:DC]? {ALL}"))
-
-
-
-
-pc = serial.Serial(port="COM3", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
-
-"""
