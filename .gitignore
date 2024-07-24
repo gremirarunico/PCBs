@@ -3,3 +3,4 @@
 *.kicad_pcb.lck
 */jlcpcb*
 */Debug*
+*.csv
