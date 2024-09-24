@@ -130,6 +130,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* ADC1 interrupt Init */
+    HAL_NVIC_SetPriority(ADC1_2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
   /* USER CODE BEGIN ADC1_MspInit 1 */
 
   /* USER CODE END ADC1_MspInit 1 */
@@ -164,6 +167,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* ADC2 interrupt Init */
+    HAL_NVIC_SetPriority(ADC1_2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
   /* USER CODE BEGIN ADC2_MspInit 1 */
 
   /* USER CODE END ADC2_MspInit 1 */
@@ -195,6 +201,15 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
 
+    /* ADC1 interrupt DeInit */
+  /* USER CODE BEGIN ADC1:ADC1_2_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "ADC1_2_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(ADC1_2_IRQn); */
+  /* USER CODE END ADC1:ADC1_2_IRQn disable */
+
   /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
   /* USER CODE END ADC1_MspDeInit 1 */
@@ -214,6 +229,15 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     PA1     ------> ADC2_IN2
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1);
+
+    /* ADC2 interrupt DeInit */
+  /* USER CODE BEGIN ADC2:ADC1_2_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "ADC1_2_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(ADC1_2_IRQn); */
+  /* USER CODE END ADC2:ADC1_2_IRQn disable */
 
   /* USER CODE BEGIN ADC2_MspDeInit 1 */
 
@@ -368,16 +392,30 @@ void HAL_HRTIM_MspPostInit(HRTIM_HandleTypeDef* hhrtim)
     PA10     ------> HRTIM1_CHB1
     PA11     ------> HRTIM1_CHB2
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_14;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF13_HRTIM1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
+    GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_15;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_HRTIM1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_HRTIM1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_11;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF13_HRTIM1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -450,6 +488,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     GPIO_InitStruct.Alternate = GPIO_AF12_LPUART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* LPUART1 interrupt Init */
+    HAL_NVIC_SetPriority(LPUART1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspInit 1 */
 
   /* USER CODE END LPUART1_MspInit 1 */
@@ -479,9 +520,55 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     */
     HAL_GPIO_DeInit(GPIOA, LPUART1_TX_Pin|LPUART1_RX_Pin);
 
+    /* LPUART1 interrupt DeInit */
+    HAL_NVIC_DisableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspDeInit 1 */
 
   /* USER CODE END LPUART1_MspDeInit 1 */
+  }
+
+}
+
+/**
+* @brief TIM_Base MSP Initialization
+* This function configures the hardware resources used in this example
+* @param htim_base: TIM_Base handle pointer
+* @retval None
+*/
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+{
+  if(htim_base->Instance==TIM1)
+  {
+  /* USER CODE BEGIN TIM1_MspInit 0 */
+
+  /* USER CODE END TIM1_MspInit 0 */
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM1_CLK_ENABLE();
+  /* USER CODE BEGIN TIM1_MspInit 1 */
+
+  /* USER CODE END TIM1_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief TIM_Base MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param htim_base: TIM_Base handle pointer
+* @retval None
+*/
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+{
+  if(htim_base->Instance==TIM1)
+  {
+  /* USER CODE BEGIN TIM1_MspDeInit 0 */
+
+  /* USER CODE END TIM1_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM1_CLK_DISABLE();
+  /* USER CODE BEGIN TIM1_MspDeInit 1 */
+
+  /* USER CODE END TIM1_MspDeInit 1 */
   }
 
 }
