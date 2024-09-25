@@ -4,6 +4,8 @@ import serial
 import time
 import csv
 
+crashCounter = 0
+
 def PSU_CONFIGURE():
     # Configure PSU
     print("PSU Configuration")
@@ -44,13 +46,15 @@ rm = pyvisa.ResourceManager()
 rm.list_resources()
 
 powerSupply = rm.open_resource('USB0::0x05E6::0x2230::802901012757210041::0::INSTR')
-oscilloscope = rm.open_resource('USB0::0x0699::0x0411::C020941::0::INSTR')
+#oscilloscope = rm.open_resource('USB0::0x0699::0x0411::C020941::0::INSTR')
+oscilloscope = rm.open_resource('USB0::0x0699::0x052C::C031466::0::INSTR')
 multimeter = rm.open_resource('USB0::0x05E6::0x7510::04479984::0::INSTR')
 powerConverter = serial.Serial(port="COM5", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
 
 powerSupplyResponse = "Keithley instruments, 2230G-30-6, 802901012757210041, 1.01-1.07\n"
 oscilloscopeResponse = "TEKTRONIX,DPO3014,C020941,CF:91.1CT FV:v2.38 \n"
+oscilloscopeResponse = "TEKTRONIX,MDO34,C031466,CF:91.1CT FV:v1.8.31\n"
 multimeterResponse = "KEITHLEY INSTRUMENTS,MODEL DMM7510,04479984,1.7.2b\n"
 
 # Check correctness of instrumentation
@@ -59,6 +63,7 @@ if(powerSupply.query("*IDN?") != powerSupplyResponse):
     exit(1)
 if(oscilloscope.query("*IDN?") != oscilloscopeResponse):
     print("Oscilloscope not correct")
+    print(repr(oscilloscope.query("*IDN?")))
     exit(1)
 if(multimeter.query("*IDN?") != multimeterResponse):
     print("Multimeter not correct")
@@ -69,6 +74,20 @@ PSU_CONFIGURE()
 # Configure Multimeter
 print(multimeter.write("*RST"))
 print(multimeter.query(":MEASure:CURRent?"))
+
+# Configure Oscilloscope
+oscilloscope.write("*RST")
+oscilloscope.write("SELect:CH1 ON")
+oscilloscope.write("SELect:CH2 ON")
+
+oscilloscope.write("HORizontal:SCAle 2e-6")
+
+oscilloscope.write("CH1:SCAle 10")
+oscilloscope.write("CH2:SCAle 10")
+
+oscilloscope.write("MEASUrement:MEAS1:STATE ON")
+oscilloscope.write("MEASUrement:MEAS1:SOUrce CH2")
+oscilloscope.write("MEASUrement:MEAS1:TYP RMS")
 
 """
 *RST
@@ -126,6 +145,7 @@ for dt in range(20, 61, 1):
     for adt in range(0, 61, 1):
         for freq in range(start, stop+1, step):
             while(not PC_CONFIGURE()):
+                crashCounter += 1
                 print("Serial crashed, trying to recovery")
                 PSU_CONFIGURE()
                 time.sleep(2)
@@ -155,6 +175,9 @@ print(powerSupply.write("*RST"))
 
 
 f.close()
+
+
+print("Crash counted %d" % (crashCounter))
 
 exit(0)
 """
