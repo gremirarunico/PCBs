@@ -261,22 +261,18 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
 
   /* USER CODE END COMP1_MspInit 0 */
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**COMP1 GPIO Configuration
-    PA4     ------> COMP1_INM
     PB1     ------> COMP1_INP
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
     GPIO_InitStruct.Pin = GPIO_PIN_1;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    /* COMP1 interrupt Init */
+    HAL_NVIC_SetPriority(COMP1_2_3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(COMP1_2_3_IRQn);
   /* USER CODE BEGIN COMP1_MspInit 1 */
 
   /* USER CODE END COMP1_MspInit 1 */
@@ -289,14 +285,16 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**COMP2 GPIO Configuration
-    PA5     ------> COMP2_INM
     PA7     ------> COMP2_INP
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_7;
+    GPIO_InitStruct.Pin = GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* COMP2 interrupt Init */
+    HAL_NVIC_SetPriority(COMP1_2_3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(COMP1_2_3_IRQn);
   /* USER CODE BEGIN COMP2_MspInit 1 */
 
   /* USER CODE END COMP2_MspInit 1 */
@@ -319,12 +317,18 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
   /* USER CODE END COMP1_MspDeInit 0 */
 
     /**COMP1 GPIO Configuration
-    PA4     ------> COMP1_INM
     PB1     ------> COMP1_INP
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
-
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_1);
+
+    /* COMP1 interrupt DeInit */
+  /* USER CODE BEGIN COMP1:COMP1_2_3_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "COMP1_2_3_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(COMP1_2_3_IRQn); */
+  /* USER CODE END COMP1:COMP1_2_3_IRQn disable */
 
   /* USER CODE BEGIN COMP1_MspDeInit 1 */
 
@@ -337,14 +341,66 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
   /* USER CODE END COMP2_MspDeInit 0 */
 
     /**COMP2 GPIO Configuration
-    PA5     ------> COMP2_INM
     PA7     ------> COMP2_INP
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5|GPIO_PIN_7);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_7);
+
+    /* COMP2 interrupt DeInit */
+  /* USER CODE BEGIN COMP2:COMP1_2_3_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "COMP1_2_3_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(COMP1_2_3_IRQn); */
+  /* USER CODE END COMP2:COMP1_2_3_IRQn disable */
 
   /* USER CODE BEGIN COMP2_MspDeInit 1 */
 
   /* USER CODE END COMP2_MspDeInit 1 */
+  }
+
+}
+
+/**
+* @brief DAC MSP Initialization
+* This function configures the hardware resources used in this example
+* @param hdac: DAC handle pointer
+* @retval None
+*/
+void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
+{
+  if(hdac->Instance==DAC1)
+  {
+  /* USER CODE BEGIN DAC1_MspInit 0 */
+
+  /* USER CODE END DAC1_MspInit 0 */
+    /* Peripheral clock enable */
+    __HAL_RCC_DAC1_CLK_ENABLE();
+  /* USER CODE BEGIN DAC1_MspInit 1 */
+
+  /* USER CODE END DAC1_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief DAC MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param hdac: DAC handle pointer
+* @retval None
+*/
+void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
+{
+  if(hdac->Instance==DAC1)
+  {
+  /* USER CODE BEGIN DAC1_MspDeInit 0 */
+
+  /* USER CODE END DAC1_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_DAC1_CLK_DISABLE();
+  /* USER CODE BEGIN DAC1_MspDeInit 1 */
+
+  /* USER CODE END DAC1_MspDeInit 1 */
   }
 
 }
