@@ -55,8 +55,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern ADC_HandleTypeDef hadc1;
-extern ADC_HandleTypeDef hadc2;
 extern COMP_HandleTypeDef hcomp1;
 extern COMP_HandleTypeDef hcomp2;
 extern UART_HandleTypeDef hlpuart1;
@@ -214,21 +212,6 @@ void PVD_PVM_IRQHandler(void)
   /* USER CODE BEGIN PVD_PVM_IRQn 1 */
 
   /* USER CODE END PVD_PVM_IRQn 1 */
-}
-
-/**
-  * @brief This function handles ADC1 and ADC2 global interrupt.
-  */
-void ADC1_2_IRQHandler(void)
-{
-  /* USER CODE BEGIN ADC1_2_IRQn 0 */
-
-  /* USER CODE END ADC1_2_IRQn 0 */
-  HAL_ADC_IRQHandler(&hadc1);
-  HAL_ADC_IRQHandler(&hadc2);
-  /* USER CODE BEGIN ADC1_2_IRQn 1 */
-
-  /* USER CODE END ADC1_2_IRQn 1 */
 }
 
 /**
