@@ -49,7 +49,7 @@ powerSupply = rm.open_resource('USB0::0x05E6::0x2230::802901012757210041::0::INS
 #oscilloscope = rm.open_resource('USB0::0x0699::0x0411::C020941::0::INSTR')
 oscilloscope = rm.open_resource('USB0::0x0699::0x052C::C031466::0::INSTR')
 multimeter = rm.open_resource('USB0::0x05E6::0x7510::04479984::0::INSTR')
-powerConverter = serial.Serial(port="COM5", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+powerConverter = serial.Serial(port="COM", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
 
 powerSupplyResponse = "Keithley instruments, 2230G-30-6, 802901012757210041, 1.01-1.07\n"
