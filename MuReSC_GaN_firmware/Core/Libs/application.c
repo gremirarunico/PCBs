@@ -19,7 +19,7 @@
 #include "power_converter.h"
 #include "feedback.h"
 #include "main.h"
-//#include <stdio.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -171,11 +171,9 @@ void clParser(void) {
 		else if (serial_is_command("vout", 1)) {
 			if (serial_get_int(2, &value)) {
 
-				fb_adc_out_target = value * FB_ADC_MAX_VALUE * FB_IN_RATIO
-						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_cal_off_out;
+				fb_set_vout(value);
 
-				sprintf(string, "Vout set to: %d mV, Target: %d, Offset: %d",
-						value, fb_adc_out_target, fb_adc_cal_off_out);
+				sprintf(string, "Vout set to: %d mV", value);
 				serial_print(string);
 				serial_nl();
 			} else {
@@ -263,7 +261,8 @@ void clParser(void) {
 		 */
 		if (serial_is_command("all", 1)) {
 			sprintf(string, "F: %d Hz, DT: %d ns, ADT: %d Duty: %d%%",
-					waveform.frequency, waveform.deadTime, waveform.aDeadTime, waveform.dutyCycle);
+					waveform.frequency, waveform.deadTime, waveform.aDeadTime,
+					waveform.dutyCycle);
 			serial_print(string);
 			serial_nl();
 
@@ -271,24 +270,6 @@ void clParser(void) {
 					"P: %d, A1: %d, A2: %d, B1: %d, B2: %d, C1: %d, C2: %d, D1: %d, D2: %d",
 					htimpar.period, htimpar.A1, htimpar.A2, htimpar.B1,
 					htimpar.B2, htimpar.C1, htimpar.C2, htimpar.D1, htimpar.D2);
-			serial_print(string);
-			serial_nl();
-		}
-		/*
-		 * VIN
-		 */
-		else if (serial_is_command("vin", 1)) {
-			//HAL_ADC_Start_IT(&hadc2);
-			sprintf(string, "Vin = %d", fb_adc_in);
-			serial_print(string);
-			serial_nl();
-		}
-		/*
-		 * VOUT
-		 */
-		else if (serial_is_command("vout", 1)) {
-			//HAL_ADC_Start_IT(&hadc1);
-			sprintf(string, "Vout = %d", fb_adc_out);
 			serial_print(string);
 			serial_nl();
 		}
@@ -344,50 +325,6 @@ void clParser(void) {
 			danger = 0;
 			serial_print("Danger mode disabled");
 			serial_nl();
-		} else {
-			serial_print("Syntax error");
-			serial_nl();
-		}
-	}
-	/*
-	 * CALIBRATION
-	 */
-	else if (serial_is_command("calibrate", 0)) {
-		if (serial_is_command("vin", 1)) {
-			// calibration of vin procedure
-			if (serial_get_int(2, &value)) {
-				// calibrate here
-				fb_adc_cal_off_in = value * FB_ADC_MAX_VALUE * FB_IN_RATIO
-						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_in;
-
-				sprintf(string,
-						"Offset: %d, True: %d mv, Read: %d, Corrected: %d",
-						fb_adc_cal_off_in, value, fb_adc_in,
-						fb_adc_in + fb_adc_cal_off_in);
-				serial_print(string);
-				serial_nl();
-
-			} else {
-				serial_print("Error getting calibration Vin");
-				serial_nl();
-			}
-		} else if (serial_is_command("vout", 1)) {
-			// calibration of vout procedure
-			if (serial_get_int(2, &value)) {
-				// calibrate here
-				fb_adc_cal_off_out = value * FB_ADC_MAX_VALUE * FB_OUT_RATIO
-						/ FB_ADC_MAX_VOLTAGE / 1000 - fb_adc_out;
-
-				sprintf(string,
-						"Offset: %d, True: %d mv, Read: %d, Corrected: %d",
-						fb_adc_cal_off_out, value, fb_adc_out,
-						fb_adc_out + fb_adc_cal_off_out);
-				serial_print(string);
-				serial_nl();
-			} else {
-				serial_print("Error getting calibration Vout");
-				serial_nl();
-			}
 		} else {
 			serial_print("Syntax error");
 			serial_nl();
