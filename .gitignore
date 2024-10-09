@@ -1,4 +1,4 @@
-*Project-backups
+*-backups/
 *.DS_Store
 *.kicad_pcb.lck
 */jlcpcb*
