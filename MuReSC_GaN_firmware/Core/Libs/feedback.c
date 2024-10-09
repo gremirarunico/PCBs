@@ -16,87 +16,57 @@
  */
 
 #include "feedback.h"
+#include "power_converter.h"
 #include <stdbool.h>
-
-// Values stored for the ADC reads
-uint16_t fb_adc_out = 0;
-uint16_t fb_adc_in = 0;
-
-// Values stored for the ADC calibration offset
-int fb_adc_cal_off_out = 0;
-int fb_adc_cal_off_in = 0;
-
-// Target value for control of the output (calibration error inserted)
-uint16_t fb_adc_out_target = 0;
-
-// For on-off control hysteresis in mV
-uint16_t fb_adc_out_hysteresis = 100 * FB_ADC_MAX_VALUE / FB_ADC_MAX_VOLTAGE
-		* FB_OUT_RATIO / 1000;
+#include <math.h>
 
 fb_mode_t fb_mode = OPEN_LOOP;
 
-// HAL_ADC_Stop_IT(ADC_HandleTypeDef *hadc)
-// HAL_ADC_IRQHandler
-// REconfigure watchdog HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDGConfTypeDef *AnalogWDGConfig)
-// void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef *hadc)
-
 void feedback_init(void) {
-	// Calibration ADC ADC_CALIB_OFFSET
-	if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) {
-		/* Calibration Error */
-		Error_Handler();
-	}
-	if (HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED) != HAL_OK) {
-		/* Calibration Error */
-		Error_Handler();
-	}
+	// Start DAC
+	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
 
-	// Start ADC conversion
-	HAL_ADC_Start_IT(&hadc1);
-	HAL_ADC_Start_IT(&hadc2);
-//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) fb_adc_in , 1);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2,
+	DAC_ALIGN_12B_R, 0);
 
-// start pwm generation
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-
+	// Start comparator
+	HAL_COMP_Start(&hcomp2);
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-	if (hadc == &hadc1) {
-		fb_adc_out = HAL_ADC_GetValue(&hadc1);
-	}
-	if (hadc == &hadc2) {
-		fb_adc_in = HAL_ADC_GetValue(&hadc2);
-	}
+void feedback_uninit(void) {
+	HAL_COMP_Stop(&hcomp2);
+}
 
-	// If feedback enabled manage it
-	if (fb_mode == ON_OFF) {
-		fb_handler_oo();
-	}
+void fb_set_vout(float vout) {
+	/* USER CODE BEGIN 3 */
+	float scaled_voltage = vout * FB_OUT_RATIO;
+	int dac_value = fb_get_dac_level(scaled_voltage);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_value);
+}
+
+int fb_get_dac_level(float voltage){
+	int level = round(voltage*4095/3.3);
+	return(level);
 }
 
 // Handler feedback for on-off
 void fb_handler_oo(void) {
 	static bool converter_status = 1;
-	// If higher than treshold stop converter
-	if (fb_adc_out > fb_adc_out_target + fb_adc_out_hysteresis && converter_status) {
+	// If higher than threshold stop converter
+	if (HAL_COMP_GetOutputLevel(&hcomp2) == COMP_OUTPUT_LEVEL_HIGH) {
 		pc_stop();
 		converter_status = 0;
 	}
 
 	// If lower start converter again
-	if (fb_adc_out < fb_adc_out_target - fb_adc_out_hysteresis && !converter_status) {
+	else {
 		pc_start();
 		converter_status = 1;
 	}
 }
 
-float fb_get_adc_out(void) {
-	return ((fb_adc_out + fb_adc_cal_off_out) * FB_ADC_MAX_VOLTAGE
-			/ FB_OUT_RATIO / FB_ADC_MAX_VALUE);
-}
-
-float fb_get_adc_in(void) {
-	return ((fb_adc_in + fb_adc_cal_off_in) * FB_ADC_MAX_VOLTAGE / FB_IN_RATIO
-			/ FB_ADC_MAX_VALUE);
+void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
+	if (fb_mode == ON_OFF) {
+		fb_handler_oo();
+	}
 }

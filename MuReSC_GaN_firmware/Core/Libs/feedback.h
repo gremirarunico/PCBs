@@ -38,21 +38,16 @@
 #define FB_ADC_MAX_VALUE 4095
 #define FB_ADC_MAX_VOLTAGE 3.3
 
-extern ADC_HandleTypeDef hadc1;
-extern ADC_HandleTypeDef hadc2;
+//extern ADC_HandleTypeDef hadc1;
+//extern ADC_HandleTypeDef hadc2;
 
-extern COMP_HandleTypeDef hcomp1;
+//extern COMP_HandleTypeDef hcomp1;
+
+extern DAC_HandleTypeDef hdac1;
 extern COMP_HandleTypeDef hcomp2;
 
-extern TIM_HandleTypeDef htim1;
+//extern TIM_HandleTypeDef htim1;
 
-extern uint16_t fb_adc_out;
-extern uint16_t fb_adc_in;
-
-extern int fb_adc_cal_off_out;
-extern int fb_adc_cal_off_in;
-
-extern uint16_t fb_adc_out_target;
 
 typedef enum {
 	OPEN_LOOP, ON_OFF
@@ -61,8 +56,10 @@ typedef enum {
 extern fb_mode_t fb_mode;
 
 void feedback_init(void);
+void feedback_uninit(void);
+void fb_set_vout(float vout);
+int fb_get_dac_level(float voltage);
 void fb_handler_oo(void);
-float fb_get_adc_out(void);
-float fb_get_adc_in(void);
+void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp);
 
 #endif /* LIBS_FEEDBACK_H_ */
