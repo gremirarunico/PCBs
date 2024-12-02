@@ -38,8 +38,7 @@ void feedback_uninit(void) {
 }
 
 void fb_set_vout(float vout) {
-	//float scaled_voltage = vout * FB_OUT_RATIO/1000;
-	float scaled_voltage = vout * 0.036833333333333/1000;
+	float scaled_voltage = vout * FB_OUT_RATIO/1000;
 	uint16_t dac_value = fb_get_dac_level(scaled_voltage);
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
 }

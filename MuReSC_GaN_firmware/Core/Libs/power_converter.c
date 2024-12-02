@@ -64,12 +64,15 @@ void pc_calculator_cmp_mono_resonant(struct WaveformParams *waveform,
 
 	unsigned int dt = ceil(PC_HRTIM_EQ_CLK_FRQ * waveform->deadTime / 1e9);
 
-	params->B2 = PC_MINIMUM_COUNTER;
-	params->A1 = PC_MINIMUM_COUNTER + dt;
-	params->A2 = PC_MINIMUM_COUNTER + period / 2;
-	params->B1 = PC_MINIMUM_COUNTER + period / 2 + dt;
+	params->A1 = 0;
+	params->A2 = period / 2 - dt / 2;
+
+	params->B1 = period / 2;
+	params->B2 = period - dt/2;
+
 	params->C1 = params->A1;
 	params->C2 = params->A2;
+
 	params->D1 = params->B1;
 	params->D2 = params->B2;
 
@@ -93,15 +96,17 @@ void pc_calculator_cmp_multi_resonant(struct WaveformParams *waveform,
 //	unsigned int adddt = ceil(PC_HRTIM_EQ_CLK_FRQ * 20 / 1e9);
 	unsigned int adddt = ceil(PC_HRTIM_EQ_CLK_FRQ * waveform->aDeadTime / 1e9);
 
-	params->B2 = PC_MINIMUM_COUNTER;
-	params->A1 = PC_MINIMUM_COUNTER + dt;
-	params->A2 = PC_MINIMUM_COUNTER + period / 2;
+	params->A1 = 0;
+	params->A2 = period / 2 - dt / 2;
 
-	params->B1 = PC_MINIMUM_COUNTER + period / 2 + dt;
-	params->C1 = PC_MINIMUM_COUNTER + dt;
-	params->C2 = PC_MINIMUM_COUNTER + period / 2;
-	params->D1 = PC_MINIMUM_COUNTER + period / 2 + dt + adddt;
-	params->D2 = PC_MINIMUM_COUNTER;
+	params->B1 = period / 2;
+	params->B2 = period - dt/2;
+
+	params->C1 = 0;
+	params->C2 = period / 2 - dt / 2;;
+
+	params->D1 = period / 2 + adddt;
+	params->D2 = period - dt/2;
 
 	params->period = period;
 

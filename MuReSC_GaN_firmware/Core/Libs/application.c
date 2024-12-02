@@ -336,6 +336,10 @@ void clParser(void) {
 	 * STOP
 	 */
 	else if (serial_is_command("stop", 0)) {
+		if (fb_mode == ON_OFF){
+			serial_print("open loop mode selected for safety!   ");
+			fb_mode = OPEN_LOOP;
+		}
 		pc_stop();
 		serial_print("Converter stopped");
 		serial_nl();
