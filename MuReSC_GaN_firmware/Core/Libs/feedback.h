@@ -44,7 +44,7 @@
 //extern COMP_HandleTypeDef hcomp1;
 
 extern DAC_HandleTypeDef hdac1;
-extern COMP_HandleTypeDef hcomp2;
+extern COMP_HandleTypeDef hcomp1;
 
 //extern TIM_HandleTypeDef htim1;
 
@@ -58,6 +58,7 @@ extern fb_mode_t fb_mode;
 void feedback_init(void);
 void feedback_uninit(void);
 void fb_set_vout(float vout);
+void fb_set_ref_out(float ref_out);
 int fb_get_dac_level(float voltage);
 void fb_handler_oo(void);
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp);

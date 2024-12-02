@@ -55,7 +55,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern COMP_HandleTypeDef hcomp2;
+extern COMP_HandleTypeDef hcomp1;
 extern UART_HandleTypeDef hlpuart1;
 /* USER CODE BEGIN EV */
 
@@ -221,7 +221,7 @@ void COMP1_2_3_IRQHandler(void)
   /* USER CODE BEGIN COMP1_2_3_IRQn 0 */
 
   /* USER CODE END COMP1_2_3_IRQn 0 */
-  HAL_COMP_IRQHandler(&hcomp2);
+  HAL_COMP_IRQHandler(&hcomp1);
   /* USER CODE BEGIN COMP1_2_3_IRQn 1 */
 
   /* USER CODE END COMP1_2_3_IRQn 1 */

@@ -24,49 +24,67 @@ fb_mode_t fb_mode = OPEN_LOOP;
 
 void feedback_init(void) {
 	// Start DAC
-	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+	HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
 
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2,
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1,
 	DAC_ALIGN_12B_R, 0);
 
 	// Start comparator
-	HAL_COMP_Start(&hcomp2);
+	HAL_COMP_Start(&hcomp1);
 }
 
 void feedback_uninit(void) {
-	HAL_COMP_Stop(&hcomp2);
+	HAL_COMP_Stop(&hcomp1);
 }
 
 void fb_set_vout(float vout) {
-	/* USER CODE BEGIN 3 */
-	float scaled_voltage = vout * FB_OUT_RATIO;
-	int dac_value = fb_get_dac_level(scaled_voltage);
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_value);
+	//float scaled_voltage = vout * FB_OUT_RATIO/1000;
+	float scaled_voltage = vout * 0.036833333333333/1000;
+	uint16_t dac_value = fb_get_dac_level(scaled_voltage);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
+}
+
+void fb_set_ref_out(float ref_out) {
+	ref_out /= 1000;
+	uint16_t dac_value = fb_get_dac_level(ref_out);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
 }
 
 int fb_get_dac_level(float voltage){
-	int level = round(voltage*4095/3.3);
+	float ela;
+	ela = voltage*4095;
+	ela = ela / 3.3;
+	int level = round(ela);
+
+	if(level > 4095)
+		level = 4095;
+
 	return(level);
 }
 
 // Handler feedback for on-off
 void fb_handler_oo(void) {
-	static bool converter_status = 1;
 	// If higher than threshold stop converter
-	if (HAL_COMP_GetOutputLevel(&hcomp2) == COMP_OUTPUT_LEVEL_HIGH) {
+	if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUT_LEVEL_HIGH) {
 		pc_stop();
-		converter_status = 0;
 	}
 
 	// If lower start converter again
 	else {
 		pc_start();
-		converter_status = 1;
 	}
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
-	if (fb_mode == ON_OFF) {
-		fb_handler_oo();
+	// Output
+	if (hcomp->Instance == COMP1) {
+		if (fb_mode == ON_OFF) {
+			fb_handler_oo();
+		}
+
+//		char *string[20];
+//		sprintf(string, "STATO CMP: %d", HAL_COMP_GetOutputLevel(&hcomp2) == COMP_OUTPUT_LEVEL_HIGH);
+//		serial_print(string);
+//		serial_nl();
 	}
 }

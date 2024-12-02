@@ -43,7 +43,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-COMP_HandleTypeDef hcomp2;
+COMP_HandleTypeDef hcomp1;
 
 DAC_HandleTypeDef hdac1;
 
@@ -59,8 +59,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_LPUART1_UART_Init(void);
 static void MX_HRTIM1_Init(void);
-static void MX_COMP2_Init(void);
 static void MX_DAC1_Init(void);
+static void MX_COMP1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -99,8 +99,8 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   MX_HRTIM1_Init();
-  MX_COMP2_Init();
   MX_DAC1_Init();
+  MX_COMP1_Init();
   /* USER CODE BEGIN 2 */
   setup();
 
@@ -168,34 +168,34 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief COMP2 Initialization Function
+  * @brief COMP1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_COMP2_Init(void)
+static void MX_COMP1_Init(void)
 {
 
-  /* USER CODE BEGIN COMP2_Init 0 */
+  /* USER CODE BEGIN COMP1_Init 0 */
 
-  /* USER CODE END COMP2_Init 0 */
+  /* USER CODE END COMP1_Init 0 */
 
-  /* USER CODE BEGIN COMP2_Init 1 */
+  /* USER CODE BEGIN COMP1_Init 1 */
 
-  /* USER CODE END COMP2_Init 1 */
-  hcomp2.Instance = COMP2;
-  hcomp2.Init.InputPlus = COMP_INPUT_PLUS_IO1;
-  hcomp2.Init.InputMinus = COMP_INPUT_MINUS_DAC1_CH2;
-  hcomp2.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
-  hcomp2.Init.Hysteresis = COMP_HYSTERESIS_NONE;
-  hcomp2.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
-  hcomp2.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
-  if (HAL_COMP_Init(&hcomp2) != HAL_OK)
+  /* USER CODE END COMP1_Init 1 */
+  hcomp1.Instance = COMP1;
+  hcomp1.Init.InputPlus = COMP_INPUT_PLUS_IO2;
+  hcomp1.Init.InputMinus = COMP_INPUT_MINUS_DAC1_CH1;
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_10MV;
+  hcomp1.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  if (HAL_COMP_Init(&hcomp1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN COMP2_Init 2 */
+  /* USER CODE BEGIN COMP1_Init 2 */
 
-  /* USER CODE END COMP2_Init 2 */
+  /* USER CODE END COMP1_Init 2 */
 
 }
 
@@ -225,7 +225,7 @@ static void MX_DAC1_Init(void)
     Error_Handler();
   }
 
-  /** DAC channel OUT2 config
+  /** DAC channel OUT1 config
   */
   sConfig.DAC_HighFrequency = DAC_HIGH_FREQUENCY_INTERFACE_MODE_AUTOMATIC;
   sConfig.DAC_DMADoubleDataMode = DISABLE;
@@ -233,10 +233,10 @@ static void MX_DAC1_Init(void)
   sConfig.DAC_SampleAndHold = DAC_SAMPLEANDHOLD_DISABLE;
   sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
   sConfig.DAC_Trigger2 = DAC_TRIGGER_NONE;
-  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
-  sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_INTERNAL;
+  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
+  sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_BOTH;
   sConfig.DAC_UserTrimming = DAC_TRIMMING_FACTORY;
-  if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK)
+  if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }

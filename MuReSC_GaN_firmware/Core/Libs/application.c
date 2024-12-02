@@ -27,6 +27,7 @@ struct WaveformParams waveform = { 1250000, 40, 50, 20 };
 //struct WaveformParams waveform = { 1250000, 20, 50 };
 struct RgstrPrmHRTIM htimpar = { 4352, 96, 2054, 2272, 4230, 96, 2054, 2272,
 		4230 };
+
 bool danger = 0;
 
 char *string[100];
@@ -183,6 +184,24 @@ void clParser(void) {
 		}
 
 		/*
+		 * Vref out target
+		 */
+		else if (serial_is_command("refout", 1)) {
+			if (serial_get_int(2, &value)) {
+
+				fb_set_ref_out(value);
+
+				sprintf(string, "Vrefout set to: %d mV", value);
+				serial_print(string);
+				serial_nl();
+			} else {
+				serial_print("Syntax error");
+				serial_nl();
+			}
+		}
+
+
+		/*
 		 * REGISTER
 		 */
 		else if (serial_is_command("reg", 1)) {
@@ -270,6 +289,15 @@ void clParser(void) {
 					"P: %d, A1: %d, A2: %d, B1: %d, B2: %d, C1: %d, C2: %d, D1: %d, D2: %d",
 					htimpar.period, htimpar.A1, htimpar.A2, htimpar.B1,
 					htimpar.B2, htimpar.C1, htimpar.C2, htimpar.D1, htimpar.D2);
+			serial_print(string);
+			serial_nl();
+		}
+
+		/*
+		 * CMP STATUS
+		 */
+		if (serial_is_command("cmp", 1)) {
+			sprintf(string, "STATO CMP: %d", HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUT_LEVEL_HIGH);
 			serial_print(string);
 			serial_nl();
 		}
