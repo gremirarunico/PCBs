@@ -4154,7 +4154,7 @@
     (property "Reference" "C16" (at 265.43 34.29 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "C" (at 265.43 36.83 0)
+    (property "Value" "1u" (at 265.43 36.83 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" (at 262.5852 39.37 0)
